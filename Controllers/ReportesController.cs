@@ -344,7 +344,11 @@ namespace Integradora.Controllers
                 string base64Image = Convert.ToBase64String(imageBytes);
                 string mimeType = fotoSolucion.ContentType ?? "image/jpeg";
 
-                string geminiApiKey = "AQ.string apiKey = _config[\"GeminiApiKey\"] ?? Environment.GetEnvironmentVariable(\"GeminiApiKey\") ?? \"\";-w";
+                string geminiApiKey = _geminiApiKey;
+                if (string.IsNullOrEmpty(geminiApiKey))
+                {
+                    geminiApiKey = Environment.GetEnvironmentVariable("GeminiApiKey") ?? "";
+                }
                 var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={geminiApiKey}";
 
                 var payload = new
@@ -421,14 +425,13 @@ namespace Integradora.Controllers
 
             if (!esValidoPorIA)
             {
-                // Borrar archivo rechazado para no acumular basura en el servidor
+               
                 if (System.IO.File.Exists(rutaFisica)) System.IO.File.Delete(rutaFisica);
                 return Json(new { success = false, message = "❌ Evidencia rechazada por la IA: " + mensajeValidacion });
             }
 
             int idReporteResuelto = 0;
 
-            // VALIDACIÓN 5: Transacción atómica con candado FOR UPDATE para evitar doble cobro de puntos
             using (var conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
