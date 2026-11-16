@@ -157,7 +157,8 @@ namespace Integradora.Controllers
             return View();
         }
 
-        
+
+        // Procesa el Registro con validaciones completas y división inteligente de nombres
         [HttpPost]
         public IActionResult Registro(string nombre, string correo, string contrasena)
         {
@@ -189,6 +190,33 @@ namespace Integradora.Controllers
                 return View();
             }
 
+            // Dividir inteligentemente el Nombre Completo para cumplir con las columnas de la BD
+            string nombreBD = nombreLimpio;
+            string apellidoPaternoBD = "Ciudadano"; // Valor por defecto si solo ingresa una palabra
+            string apellidoMaternoBD = "";
+
+            var partes = nombreLimpio.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (partes.Length == 2)
+            {
+                // Ejemplo: "Octavio Pérez" -> Nombre: Octavio, Apellido Paterno: Pérez
+                nombreBD = partes[0];
+                apellidoPaternoBD = partes[1];
+            }
+            else if (partes.Length == 3)
+            {
+                // Ejemplo: "Octavio Pérez Gómez" -> Nombre: Octavio, Apellido P: Pérez, Apellido M: Gómez
+                nombreBD = partes[0];
+                apellidoPaternoBD = partes[1];
+                apellidoMaternoBD = partes[2];
+            }
+            else if (partes.Length >= 4)
+            {
+                // Ejemplo: "Julio Manuel Santos Hernandez" -> Nombre: Julio Manuel, Apellido P: Santos, Apellido M: Hernandez
+                nombreBD = $"{partes[0]} {partes[1]}";
+                apellidoPaternoBD = partes[2];
+                apellidoMaternoBD = partes[3];
+            }
+
             string connectionString = _configuration.GetConnectionString("NeonDb");
 
             try
@@ -208,24 +236,28 @@ namespace Integradora.Controllers
                         }
                     }
 
+                    // Inserción mapeando las 3 columnas por separado a la base de datos
                     const string sqlInsert = @"
-                        INSERT INTO usuarios (nombre, correo, password_hash, rol, puntos_totales, fecha_registro)
-                        VALUES (@nom, @correo, @pwd, 'Ciudadano', 0, NOW())
-                        RETURNING id_usuario;";
+                INSERT INTO usuarios (nombre, apellido_paterno, apellido_materno, correo, password_hash, rol, puntos_totales, fecha_registro)
+                VALUES (@nom, @app, @apm, @correo, @pwd, 'Ciudadano', 0, NOW())
+                RETURNING id_usuario;";
 
                     int newId = 0;
                     using (var cmd = new NpgsqlCommand(sqlInsert, conn))
                     {
-                        cmd.Parameters.AddWithValue("@nom", nombreLimpio);
+                        cmd.Parameters.AddWithValue("@nom", nombreBD);
+                        cmd.Parameters.AddWithValue("@app", apellidoPaternoBD);
+                        cmd.Parameters.AddWithValue("@apm", apellidoMaternoBD);
                         cmd.Parameters.AddWithValue("@correo", emailLimpio);
                         cmd.Parameters.AddWithValue("@pwd", passLimpio);
                         newId = Convert.ToInt32(cmd.ExecuteScalar());
                     }
 
                     string iniciales = "U";
-                    var partes = nombreLimpio.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    if (partes.Length > 1) iniciales = $"{char.ToUpper(partes[0][0])}{char.ToUpper(partes[1][0])}";
-                    else if (partes.Length == 1) iniciales = char.ToUpper(partes[0][0]).ToString();
+                    if (partes.Length > 1)
+                        iniciales = $"{char.ToUpper(partes[0][0])}{char.ToUpper(partes[partes.Length - 1][0])}";
+                    else if (partes.Length == 1)
+                        iniciales = char.ToUpper(partes[0][0]).ToString();
 
                     HttpContext.Session.SetInt32("UsuarioId", newId);
                     HttpContext.Session.SetString("UsuarioNombre", nombreLimpio);
@@ -242,7 +274,6 @@ namespace Integradora.Controllers
             }
         }
 
-        // Panel del Ciudadano (Mi Perfil, Puntos y Retos)
         [HttpGet]
         public IActionResult Lista()
         {
