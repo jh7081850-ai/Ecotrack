@@ -349,7 +349,7 @@ namespace Integradora.Controllers
                 {
                     geminiApiKey = Environment.GetEnvironmentVariable("GeminiApiKey") ?? "";
                 }
-                var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={geminiApiKey}";
+                var url = $"https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key={geminiApiKey}";
 
                 var payload = new
                 {
