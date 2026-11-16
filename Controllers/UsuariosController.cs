@@ -43,7 +43,7 @@ namespace Integradora.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            // Si ya tiene sesión activa, redirigir directamente a su panel
+            
             int? idUsuario = HttpContext.Session.GetInt32("UsuarioId");
             string rol = HttpContext.Session.GetString("UsuarioRol");
             if (idUsuario != null && idUsuario > 0 && !string.IsNullOrEmpty(rol))
@@ -109,7 +109,7 @@ namespace Integradora.Controllers
                                 string nombreReal = reader["nombre"]?.ToString() ?? "Usuario";
                                 string rolUser = reader["rol"]?.ToString() ?? "Ciudadano";
 
-                                // Generar iniciales reales
+                            
                                 string iniciales = "U";
                                 var partes = nombreReal.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
                                 if (partes.Length > 1)
@@ -121,13 +121,12 @@ namespace Integradora.Controllers
                                     iniciales = char.ToUpper(partes[0][0]).ToString();
                                 }
 
-                                // Guardar en Session activa
                                 HttpContext.Session.SetInt32("UsuarioId", idUser);
                                 HttpContext.Session.SetString("UsuarioNombre", nombreReal);
                                 HttpContext.Session.SetString("UsuarioIniciales", iniciales);
                                 HttpContext.Session.SetString("UsuarioRol", rolUser);
 
-                                // Redirección según rol
+                               
                                 if (rolUser.Trim().Equals("Administrador", StringComparison.OrdinalIgnoreCase))
                                 {
                                     return RedirectToAction("Index", "Admin");
@@ -151,14 +150,14 @@ namespace Integradora.Controllers
             return View("Index");
         }
 
-        // Vista de Registro
+        
         [HttpGet]
         public IActionResult Registro()
         {
             return View();
         }
 
-        // Procesa el Registro con validaciones completas
+        
         [HttpPost]
         public IActionResult Registro(string nombre, string correo, string contrasena)
         {

@@ -10,7 +10,6 @@ namespace Integradora.Controllers
     {
         private readonly IConfiguration _configuration;
 
-        // Inyectamos IConfiguration para obtener la conexión de forma segura
         public RetosEcologicosController(IConfiguration configuration)
         {
             _configuration = configuration;

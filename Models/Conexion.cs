@@ -8,18 +8,42 @@ namespace Integradora.Models
 {
     public class Conexion
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration? _configuration;
+        private static IConfiguration? _staticConfiguration;
         private NpgsqlConnection _connection = new();
 
-        // Inyectamos IConfiguration para obtener la cadena desde appsettings o Render
+        // Constructor con inyección de dependencias
         public Conexion(IConfiguration configuration)
         {
             _configuration = configuration;
+            _staticConfiguration = configuration;
         }
+
+        // Constructor sin parámetros (para que los `new Conexion()` existentes no fallen)
+        public Conexion() { }
 
         private string GetConnectionString()
         {
-            return _configuration.GetConnectionString("NeonDb") ?? "";
+            // 1. Intenta obtenerlo desde la configuración inyectada
+            if (_configuration != null)
+            {
+                var conn = _configuration.GetConnectionString("NeonDb");
+                if (!string.IsNullOrEmpty(conn)) return conn;
+            }
+
+            // 2. Intenta obtenerlo desde la configuración estática
+            if (_staticConfiguration != null)
+            {
+                var conn = _staticConfiguration.GetConnectionString("NeonDb");
+                if (!string.IsNullOrEmpty(conn)) return conn;
+            }
+
+            // 3. Fallback a la variable de entorno de Render / Sistema operativo
+            var envConn = Environment.GetEnvironmentVariable("ConnectionStrings__NeonDb")
+                          ?? Environment.GetEnvironmentVariable("NeonDb");
+            if (!string.IsNullOrEmpty(envConn)) return envConn;
+
+            return "";
         }
 
         public DataTable GetQuery(string sql)
@@ -65,7 +89,7 @@ namespace Integradora.Models
             }
             catch (Npgsql.PostgresException ex) when (ex.SqlState == "23505")
             {
-                return -1; // Duplicado / Violación de índice único
+                return -1; // Duplicado
             }
             catch (Exception)
             {
