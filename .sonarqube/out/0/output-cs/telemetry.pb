@@ -1,0 +1,1 @@
+AR4D:\Integradora_Visual\Integradora\Integradora.csprojòCSharp12

@@ -1,0 +1,2265 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.9.0.0",
+        "fileVersion": "5.9.0-1.26423.113 (e34a38d2ae1fc26406a317517196e55c68ff83ab)",
+        "semanticVersion": "5.9.0",
+        "language": "es-ES"
+      },
+      "results": [
+        {
+          "ruleId": "CS0108",
+          "level": "warning",
+          "message": "'Reportes.GetQuery(string)' oculta el miembro heredado 'Conexion.GetQuery(string)'. Use la palabra clave new si su intención era ocultarlo.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Reportes.cs",
+                "region": {
+                  "startLine": 56,
+                  "startColumn": 27,
+                  "endLine": 56,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "El elemento propiedad \"nombre\" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador \"required'\"o declarar el propiedad como un valor que acepta valores NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 16,
+                  "endLine": 22,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 23,
+                  "endLine": 13,
+                  "endColumn": 29
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "El elemento propiedad \"apellido_paterno\" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador \"required'\"o declarar el propiedad como un valor que acepta valores NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 16,
+                  "endLine": 22,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 23,
+                  "endLine": 14,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "El elemento propiedad \"apellido_materno\" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador \"required'\"o declarar el propiedad como un valor que acepta valores NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 16,
+                  "endLine": 22,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 23,
+                  "endLine": 15,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "El elemento propiedad \"correo\" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador \"required'\"o declarar el propiedad como un valor que acepta valores NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 16,
+                  "endLine": 22,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 16,
+                  "startColumn": 23,
+                  "endLine": 16,
+                  "endColumn": 29
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "El elemento propiedad \"password_hash\" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador \"required'\"o declarar el propiedad como un valor que acepta valores NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 16,
+                  "endLine": 22,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 17,
+                  "startColumn": 23,
+                  "endLine": 17,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "El elemento propiedad \"rol\" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador \"required'\"o declarar el propiedad como un valor que acepta valores NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 16,
+                  "endLine": 22,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 18,
+                  "startColumn": 23,
+                  "endLine": 18,
+                  "endColumn": 26
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"nom\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 50,
+                  "startColumn": 62,
+                  "endLine": 50,
+                  "endColumn": 86
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"apPat\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 51,
+                  "startColumn": 62,
+                  "endLine": 51,
+                  "endColumn": 96
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"apMat\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 52,
+                  "startColumn": 62,
+                  "endLine": 52,
+                  "endColumn": 96
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"corr\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 53,
+                  "startColumn": 62,
+                  "endLine": 53,
+                  "endColumn": 86
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"pass\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 54,
+                  "startColumn": 62,
+                  "endLine": 54,
+                  "endColumn": 93
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"roles\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 62,
+                  "endLine": 55,
+                  "endColumn": 83
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8600",
+          "level": "warning",
+          "message": "Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 42,
+                  "startColumn": 26,
+                  "endLine": 42,
+                  "endColumn": 69
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8603",
+          "level": "warning",
+          "message": "Posible tipo de valor devuelto de referencia nulo.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 103,
+                  "startColumn": 46,
+                  "endLine": 103,
+                  "endColumn": 50
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"nom\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 108,
+                  "startColumn": 17,
+                  "endLine": 108,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"apPat\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 109,
+                  "startColumn": 17,
+                  "endLine": 109,
+                  "endColumn": 51
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"apMat\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 110,
+                  "startColumn": 17,
+                  "endLine": 110,
+                  "endColumn": 51
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"corr\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 111,
+                  "startColumn": 17,
+                  "endLine": 111,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"roles\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 113,
+                  "startColumn": 17,
+                  "endLine": 113,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS0162",
+          "level": "warning",
+          "message": "Se detectó código inaccesible",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Conexion.cs",
+                "region": {
+                  "startLine": 51,
+                  "startColumn": 17,
+                  "endLine": 51,
+                  "endColumn": 23
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS8603",
+          "level": "warning",
+          "message": "Posible tipo de valor devuelto de referencia nulo.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 126,
+                  "startColumn": 46,
+                  "endLine": 126,
+                  "endColumn": 50
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"nom\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 131,
+                  "startColumn": 14,
+                  "endLine": 131,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"apPat\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 132,
+                  "startColumn": 14,
+                  "endLine": 132,
+                  "endColumn": 48
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"apMat\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 133,
+                  "startColumn": 14,
+                  "endLine": 133,
+                  "endColumn": 48
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"corr\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 134,
+                  "startColumn": 14,
+                  "endLine": 134,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Posible argumento de referencia nulo para el parámetro \"roles\" en \"Usuarios.Usuarios(int id, string nom, string apPat, string apMat, string corr, string pass, string roles, int puntosTotales, DateOnly fechaRegistro)\".",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Usuarios.cs",
+                "region": {
+                  "startLine": 136,
+                  "startColumn": 14,
+                  "endLine": 136,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "El elemento propiedad \"titulo\" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador \"required'\"o declarar el propiedad como un valor que acepta valores NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Retos_Ecologicos.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 16,
+                  "endLine": 14,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Retos_Ecologicos.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 23,
+                  "endLine": 7,
+                  "endColumn": 29
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "El elemento propiedad \"descripion\" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador \"required'\"o declarar el propiedad como un valor que acepta valores NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Retos_Ecologicos.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 16,
+                  "endLine": 14,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Retos_Ecologicos.cs",
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 23,
+                  "endLine": 8,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "El elemento propiedad \"estado\" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador \"required'\"o declarar el propiedad como un valor que acepta valores NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Retos_Ecologicos.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 16,
+                  "endLine": 14,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Retos_Ecologicos.cs",
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 23,
+                  "endLine": 12,
+                  "endColumn": 29
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "El elemento propiedad \"titulo\" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador \"required'\"o declarar el propiedad como un valor que acepta valores NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Reportes.cs",
+                "region": {
+                  "startLine": 17,
+                  "startColumn": 16,
+                  "endLine": 17,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Reportes.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 23,
+                  "endLine": 10,
+                  "endColumn": 29
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "El elemento propiedad \"descripcion\" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador \"required'\"o declarar el propiedad como un valor que acepta valores NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Reportes.cs",
+                "region": {
+                  "startLine": 17,
+                  "startColumn": 16,
+                  "endLine": 17,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Reportes.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 23,
+                  "endLine": 11,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8600",
+          "level": "warning",
+          "message": "Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 153,
+                  "startColumn": 35,
+                  "endLine": 153,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8600",
+          "level": "warning",
+          "message": "Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 240,
+                  "startColumn": 29,
+                  "endLine": 240,
+                  "endColumn": 75
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8600",
+          "level": "warning",
+          "message": "Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 241,
+                  "startColumn": 32,
+                  "endLine": 241,
+                  "endColumn": 81
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8600",
+          "level": "warning",
+          "message": "Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 242,
+                  "startColumn": 26,
+                  "endLine": 242,
+                  "endColumn": 69
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8602",
+          "level": "warning",
+          "message": "Desreferencia de una referencia posiblemente NULL.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 390,
+                  "startColumn": 46,
+                  "endLine": 390,
+                  "endColumn": 56
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8600",
+          "level": "warning",
+          "message": "Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 405,
+                  "startColumn": 61,
+                  "endLine": 405,
+                  "endColumn": 80
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "El campo 'Views_Admin_Usuarios.__tagHelperStringValueBuffer' nunca se usa",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/obj/Debug/net8.0/Microsoft.CodeAnalysis.Razor.Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views/Admin/Usuarios_cshtml.g.cs",
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 24,
+                  "endLine": 41,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "El campo 'Views_HistorialPuntos_Index.__tagHelperStringValueBuffer' nunca se usa",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/obj/Debug/net8.0/Microsoft.CodeAnalysis.Razor.Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views/HistorialPuntos/Index_cshtml.g.cs",
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 24,
+                  "endLine": 41,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "El campo 'Views_Usuarios_Registro.__tagHelperStringValueBuffer' nunca se usa",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/obj/Debug/net8.0/Microsoft.CodeAnalysis.Razor.Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views/Usuarios/Registro_cshtml.g.cs",
+                "region": {
+                  "startLine": 45,
+                  "startColumn": 24,
+                  "endLine": 45,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "El campo 'Views_Admin_Index.__tagHelperStringValueBuffer' nunca se usa",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/obj/Debug/net8.0/Microsoft.CodeAnalysis.Razor.Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views/Admin/Index_cshtml.g.cs",
+                "region": {
+                  "startLine": 46,
+                  "startColumn": 24,
+                  "endLine": 46,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "El campo 'Views_RetosEcologicos_Index.__tagHelperStringValueBuffer' nunca se usa",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/obj/Debug/net8.0/Microsoft.CodeAnalysis.Razor.Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views/RetosEcologicos/Index_cshtml.g.cs",
+                "region": {
+                  "startLine": 43,
+                  "startColumn": 24,
+                  "endLine": 43,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "El campo 'Views_Shared__ValidationScriptsPartial.__tagHelperStringValueBuffer' nunca se usa",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/obj/Debug/net8.0/Microsoft.CodeAnalysis.Razor.Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views/Shared/_ValidationScriptsPartial_cshtml.g.cs",
+                "region": {
+                  "startLine": 43,
+                  "startColumn": 24,
+                  "endLine": 43,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "El campo 'Views_Shared__Layout.__tagHelperStringValueBuffer' nunca se usa",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/obj/Debug/net8.0/Microsoft.CodeAnalysis.Razor.Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views/Shared/_Layout_cshtml.g.cs",
+                "region": {
+                  "startLine": 54,
+                  "startColumn": 24,
+                  "endLine": 54,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "El campo 'Views_Admin_Participantes.__tagHelperStringValueBuffer' nunca se usa",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/obj/Debug/net8.0/Microsoft.CodeAnalysis.Razor.Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views/Admin/Participantes_cshtml.g.cs",
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 24,
+                  "endLine": 41,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "El campo 'Views_Admin_Puntos.__tagHelperStringValueBuffer' nunca se usa",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/obj/Debug/net8.0/Microsoft.CodeAnalysis.Razor.Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views/Admin/Puntos_cshtml.g.cs",
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 24,
+                  "endLine": 41,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "El campo 'Views_Usuarios_Lista.__tagHelperStringValueBuffer' nunca se usa",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/obj/Debug/net8.0/Microsoft.CodeAnalysis.Razor.Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views/Usuarios/Lista_cshtml.g.cs",
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 24,
+                  "endLine": 41,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "El campo 'Views_ParticipantesRetos_Index.__tagHelperStringValueBuffer' nunca se usa",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/obj/Debug/net8.0/Microsoft.CodeAnalysis.Razor.Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views/ParticipantesRetos/Index_cshtml.g.cs",
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 24,
+                  "endLine": 41,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "El campo 'Views_Admin_Retos.__tagHelperStringValueBuffer' nunca se usa",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/obj/Debug/net8.0/Microsoft.CodeAnalysis.Razor.Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views/Admin/Retos_cshtml.g.cs",
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 24,
+                  "endLine": 41,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "El campo 'Views_Usuarios_Index.__tagHelperStringValueBuffer' nunca se usa",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/obj/Debug/net8.0/Microsoft.CodeAnalysis.Razor.Compiler/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Views/Usuarios/Index_cshtml.g.cs",
+                "region": {
+                  "startLine": 45,
+                  "startColumn": 24,
+                  "endLine": 45,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "S2068",
+          "level": "warning",
+          "message": "\"password\" detected here, make sure this is not a hard-coded credential.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/AdministradorController.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 33,
+                  "endLine": 11,
+                  "endColumn": 242
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2068",
+          "level": "warning",
+          "message": "\"password\" detected here, make sure this is not a hard-coded credential.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/HistorialPuntosController.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 33,
+                  "endLine": 10,
+                  "endColumn": 241
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2068",
+          "level": "warning",
+          "message": "\"password\" detected here, make sure this is not a hard-coded credential.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Models/Conexion.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 24,
+                  "endLine": 9,
+                  "endColumn": 233
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2068",
+          "level": "warning",
+          "message": "\"password\" detected here, make sure this is not a hard-coded credential.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ParticipantesRetosController.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 33,
+                  "endLine": 10,
+                  "endColumn": 241
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2068",
+          "level": "warning",
+          "message": "\"password\" detected here, make sure this is not a hard-coded credential.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 33,
+                  "endLine": 12,
+                  "endColumn": 242
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2068",
+          "level": "warning",
+          "message": "\"password\" detected here, make sure this is not a hard-coded credential.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/RetosEcologicosController.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 33,
+                  "endLine": 10,
+                  "endColumn": 241
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "SYSLIB1045",
+          "level": "note",
+          "message": "Use 'GeneratedRegexAttribute' para generar la implementación de expresiones regulares en tiempo de compilación.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 24,
+                  "startColumn": 20,
+                  "endLine": 24,
+                  "endColumn": 71
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "SYSLIB1045",
+          "level": "note",
+          "message": "Use 'GeneratedRegexAttribute' para generar la implementación de expresiones regulares en tiempo de compilación.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 30,
+                  "startColumn": 35,
+                  "endLine": 30,
+                  "endColumn": 64
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "SYSLIB1045",
+          "level": "note",
+          "message": "Use 'GeneratedRegexAttribute' para generar la implementación de expresiones regulares en tiempo de compilación.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 31,
+                  "startColumn": 35,
+                  "endLine": 31,
+                  "endColumn": 64
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "SYSLIB1045",
+          "level": "note",
+          "message": "Use 'GeneratedRegexAttribute' para generar la implementación de expresiones regulares en tiempo de compilación.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 32,
+                  "startColumn": 32,
+                  "endLine": 32,
+                  "endColumn": 61
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "SYSLIB1045",
+          "level": "note",
+          "message": "Use 'GeneratedRegexAttribute' para generar la implementación de expresiones regulares en tiempo de compilación.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 18,
+                  "startColumn": 20,
+                  "endLine": 18,
+                  "endColumn": 72
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await RunAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Program.cs",
+                "region": {
+                  "startLine": 36,
+                  "startColumn": 1,
+                  "endLine": 36,
+                  "endColumn": 10
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "El miembro \"EsNombreValido\" no tiene acceso a los datos de la instancia y se puede marcar como static.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 21,
+                  "startColumn": 22,
+                  "endLine": 21,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "El miembro \"EsContrasenaSegura\" no tiene acceso a los datos de la instancia y se puede marcar como static.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 27,
+                  "startColumn": 22,
+                  "endLine": 27,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "El miembro \"EsCorreoValido\" no tiene acceso a los datos de la instancia y se puede marcar como static.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 22,
+                  "endLine": 15,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6418",
+          "level": "warning",
+          "message": "\"geminiApiKey\" detected here, make sure this is not a hard-coded secret.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 347,
+                  "startColumn": 39,
+                  "endLine": 347,
+                  "endColumn": 94
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6962",
+          "level": "warning",
+          "message": "Reuse HttpClient instances rather than create new ones with each controller action invocation.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 374,
+                  "startColumn": 37,
+                  "endLine": 374,
+                  "endColumn": 90
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await ReadAllBytesAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 343,
+                  "startColumn": 37,
+                  "endLine": 343,
+                  "endColumn": 76
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await OpenAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 434,
+                  "startColumn": 17,
+                  "endLine": 434,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await BeginTransactionAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 435,
+                  "startColumn": 36,
+                  "endLine": 435,
+                  "endColumn": 59
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await ExecuteReaderAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 442,
+                  "startColumn": 49,
+                  "endLine": 442,
+                  "endColumn": 72
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await ReadAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 444,
+                  "startColumn": 38,
+                  "endLine": 444,
+                  "endColumn": 51
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await RollbackAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 446,
+                  "startColumn": 37,
+                  "endLine": 446,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await RollbackAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 452,
+                  "startColumn": 37,
+                  "endLine": 452,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await ExecuteNonQueryAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 466,
+                  "startColumn": 33,
+                  "endLine": 466,
+                  "endColumn": 60
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await ExecuteNonQueryAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 475,
+                  "startColumn": 37,
+                  "endLine": 475,
+                  "endColumn": 60
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await ExecuteNonQueryAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 483,
+                  "startColumn": 29,
+                  "endLine": 483,
+                  "endColumn": 57
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await ExecuteNonQueryAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 494,
+                  "startColumn": 29,
+                  "endLine": 494,
+                  "endColumn": 57
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await ExecuteNonQueryAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 501,
+                  "startColumn": 29,
+                  "endLine": 501,
+                  "endColumn": 58
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await ExecuteNonQueryAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 509,
+                  "startColumn": 29,
+                  "endLine": 509,
+                  "endColumn": 54
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await CommitAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 512,
+                  "startColumn": 25,
+                  "endLine": 512,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await RollbackAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/ReportesController.cs",
+                "region": {
+                  "startLine": 516,
+                  "startColumn": 25,
+                  "endLine": 516,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6444",
+          "level": "warning",
+          "message": "Pass a timeout to limit the execution time.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 32,
+                  "startColumn": 32,
+                  "endLine": 32,
+                  "endColumn": 61
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6444",
+          "level": "warning",
+          "message": "Pass a timeout to limit the execution time.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 31,
+                  "startColumn": 35,
+                  "endLine": 31,
+                  "endColumn": 64
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6444",
+          "level": "warning",
+          "message": "Pass a timeout to limit the execution time.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 30,
+                  "startColumn": 35,
+                  "endLine": 30,
+                  "endColumn": 64
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6444",
+          "level": "warning",
+          "message": "Pass a timeout to limit the execution time.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 24,
+                  "startColumn": 20,
+                  "endLine": 24,
+                  "endColumn": 71
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6444",
+          "level": "warning",
+          "message": "Pass a timeout to limit the execution time.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/Integradora_Visual/Integradora/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 18,
+                  "startColumn": 20,
+                  "endLine": 18,
+                  "endColumn": 72
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CA1822": {
+          "id": "CA1822",
+          "shortDescription": "Marcar miembros como static",
+          "fullDescription": "Los miembros que no tienen acceso a datos de instancia o que llaman a métodos de instancia se pueden marcar como static. Después de marcar los métodos como static, el compilador emitirá los sitios de llamada no virtuales para estos miembros. Esto puede proporcionar una mejora apreciable del rendimiento del código sensible al rendimiento.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "PortedFromFxCop",
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CS0108": {
+          "id": "CS0108",
+          "shortDescription": "El miembro oculta el miembro heredado. Falta una contraseña nueva",
+          "fullDescription": "Se declaró una variable con el mismo nombre que una variable de un tipo base. Sin embargo, no se usó la palabra clave new. Esta advertencia le informa de que debería usar new. La variable se declaró como si new se hubiera usado en la declaración.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0108)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS0162": {
+          "id": "CS0162",
+          "shortDescription": "Se detectó código inaccesible",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0162)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS0169": {
+          "id": "CS0169",
+          "shortDescription": "Nunca se usa el campo",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0169)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8600": {
+          "id": "CS8600",
+          "shortDescription": "Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8600)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8602": {
+          "id": "CS8602",
+          "shortDescription": "Desreferencia de una referencia posiblemente NULL.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8602)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8603": {
+          "id": "CS8603",
+          "shortDescription": "Posible tipo de valor devuelto de referencia nulo",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8603)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8604": {
+          "id": "CS8604",
+          "shortDescription": "Posible argumento de referencia nulo",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8604)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8618": {
+          "id": "CS8618",
+          "shortDescription": "Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador \"required\" o declararlo como un valor que acepta valores NULL.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8618)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "S2068": {
+          "id": "S2068",
+          "shortDescription": "Credentials should not be hard-coded",
+          "fullDescription": "Hard-coding credentials in source code or binaries makes it easy for attackers to extract sensitive information, especially in distributed or open-source applications. This practice exposes your application to significant security risks.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Vulnerability",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S6418": {
+          "id": "S6418",
+          "shortDescription": "Secrets should not be hard-coded",
+          "fullDescription": "Hard-coding secrets in source code or binaries makes it easy for attackers to extract sensitive information, especially in distributed or open-source applications. This practice exposes credentials and tokens, increasing the risk of unauthorized access and data breaches.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Blocker Vulnerability",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S6444": {
+          "id": "S6444",
+          "shortDescription": "Regular expressions should be executed with a timeout",
+          "fullDescription": "Regular expressions without a timeout can be exploited to cause a Denial-of-Service attack.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Minor Vulnerability",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "SonarWay",
+              "CompilationEnd"
+            ]
+          }
+        },
+        "S6962": {
+          "id": "S6962",
+          "shortDescription": "You should pool HTTP connections with HttpClientFactory",
+          "fullDescription": "In frequently used code paths, such as controller actions, you should avoid using the HttpClient directly and opt for one of the IHttpClientFactory-based mechanisms instead. This way, you avoid wasting resources and creating performance overhead.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S6966": {
+          "id": "S6966",
+          "shortDescription": "Awaitable method should be used",
+          "fullDescription": "In an async method, any blocking operations should be avoided.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "SYSLIB1045": {
+          "id": "SYSLIB1045",
+          "shortDescription": "Convertir en 'GeneratedRegexAttribute'.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1045",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true
+          }
+        }
+      }
+    }
+  ]
+}

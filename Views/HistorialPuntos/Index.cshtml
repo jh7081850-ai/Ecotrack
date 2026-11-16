@@ -1,0 +1,90 @@
+﻿@{
+    Layout = null;
+    var nombre = ViewBag.UsuarioNombre ?? "Administrador";
+    var iniciales = ViewBag.UsuarioIniciales ?? "AD";
+    var rol = ViewBag.UsuarioRol ?? "Administrador";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Historial de Puntos - ECOTRACK</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { display: flex; height: 100vh; background: #f4fbf5; color: #143319; }
+        .sidebar { width: 260px; min-width: 260px; background: #fff; border-right: 1px solid #d9e7dc; display: flex; flex-direction: column; justify-content: space-between; }
+        .brand-header { padding: 22px; font-size: 20px; font-weight: 800; color: #1b5e20; }
+        .user-card { display: flex; align-items: center; gap: 12px; margin: 0 16px 20px; padding: 12px 14px; background: #e8f5e9; border-radius: 12px; }
+        .user-avatar { width: 38px; height: 38px; border-radius: 50%; background: #2e7d32; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .menu-heading { font-size: 10.5px; font-weight: 700; color: #76a880; padding: 12px 22px 6px; }
+        .menu-link { display: flex; align-items: center; gap: 12px; padding: 10px 22px; color: #385e3c; text-decoration: none; font-size: 13.5px; font-weight: 600; }
+        .menu-link:hover { background: #f0f7f1; }
+        .menu-link.active { background: #e8f5e9; color: #1b5e20; border-left: 4px solid #2e7d32; font-weight: 700; }
+        .main-content { flex: 1; overflow-y: auto; padding: 28px 34px; }
+        .panel-box { background: #fff; border-radius: 14px; border: 1px solid #d9e7dc; padding: 22px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 15px; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #edf4ee; }
+        th { background: #f4fbf5; color: #2e5934; font-weight: 700; }
+        .pts-tag { font-weight: 800; color: #2e7d32; }
+    </style>
+</head>
+<body>
+<aside class="sidebar">
+    <div>
+        <div class="brand-header">ECOTRACK</div>
+        <div class="user-card">
+            <div class="user-avatar">@iniciales</div>
+            <div>
+                <div style="font-size:13.5px; font-weight:700; color:#1b5e20;">@nombre</div>
+                <div style="font-size:11.5px; color:#4e7d55;">@rol</div>
+            </div>
+        </div>
+        <div class="menu-heading">MONITOREO & MAPA</div>
+        <a href="/Reportes/Index" class="menu-link">🗺️ Mapa de Reportes</a>
+        <div class="menu-heading">ADMINISTRACIÓN & TABLAS</div>
+        <a href="/Usuarios/Lista" class="menu-link">👥 Usuarios</a>
+        <a href="/RetosEcologicos/Index" class="menu-link">🌱 Retos Ecológicos</a>
+        <a href="/ParticipantesRetos/Index" class="menu-link">🤝 Participantes Retos</a>
+        <a href="/HistorialPuntos/Index" class="menu-link active">🏆 Historial de Puntos</a>
+    </div>
+    <div style="padding: 18px 22px; border-top: 1px solid #edf4ee;">
+        <a href="/Usuarios/Index" style="color: #c62828; text-decoration:none; font-size:13px; font-weight:600;">🚪 Cerrar Sesión</a>
+    </div>
+</aside>
+
+<main class="main-content">
+    <h2 style="font-size: 22px; color: #1b5e20; margin-bottom: 4px;">Auditoría de Puntos Ecológicos</h2>
+    <p style="font-size: 13px; color: #4e7d55; margin-bottom: 22px;">Registro de recompensas asignadas por reportes y retos cumplidos</p>
+
+    <div class="panel-box">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Transacción</th>
+                    <th>Ciudadano</th>
+                    <th>Puntos</th>
+                    <th>Motivo</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.Movimientos != null)
+                {
+                    foreach (var m in ViewBag.Movimientos)
+                    {
+                        <tr>
+                            <td>#@m.Id</td>
+                            <td style="font-weight:600;">@m.Usuario</td>
+                            <td class="pts-tag">+@m.Puntos pts</td>
+                            <td>@m.Motivo</td>
+                            <td>@m.Fecha</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

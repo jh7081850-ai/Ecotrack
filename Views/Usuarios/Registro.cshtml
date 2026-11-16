@@ -1,0 +1,232 @@
+﻿@{
+    Layout = null;
+}<!DOCTYPE html><html lang="es"><head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro Ciudadano - ECOTRACK</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at top left, #e8f5e9 0%, #dcedc8 45%, #c8e6c9 100%);
+            padding: 20px;
+        }
+        .card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 430px;
+            border-radius: 24px;
+            padding: 34px 32px;
+            box-shadow: 0 20px 45px rgba(27, 94, 32, 0.12);
+            border: 1px solid rgba(46, 125, 50, 0.12);
+            text-align: center;
+        }
+        .logo-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1b5e20;
+            letter-spacing: 0.4px;
+        }
+        .subtitle {
+            font-size: 13.5px;
+            color: #4b6352;
+            font-weight: 500;
+            margin-top: 4px;
+            margin-bottom: 24px;
+        }
+        .form-group { text-align: left; margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #1b4332;
+            margin-bottom: 6px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #d8e2dc;
+            border-radius: 12px;
+            font-size: 13.5px;
+            color: #1e293b;
+            background-color: #f8faf9;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .form-group input:focus {
+            background-color: #ffffff;
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.12);
+        }
+        
+        /* Contenedor del ojo para contraseña */
+        .password-wrapper { position: relative; display: flex; align-items: center; }
+        .password-wrapper input { padding-right: 42px; }
+        .toggle-password {
+            position: absolute; right: 12px; background: none; border: none; cursor: pointer;
+            padding: 4px; display: flex; align-items: center; justify-content: center; color: #52796f;
+            transition: color 0.2s ease;
+        }
+        .toggle-password:hover { color: #1b5e20; }
+        .toggle-password svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* Lista visual de requisitos de contraseña */
+        .pwd-rules { list-style: none; margin-top: 9px; font-size: 11.5px; color: #52796f; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .pwd-rules li { display: flex; align-items: center; gap: 5px; transition: color 0.2s; }
+        .pwd-rules li.ok { color: #2e7d32; font-weight: 700; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 14.5px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 8px 18px rgba(46, 125, 50, 0.25);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+        }
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #338a37 0%, #1f6b25 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 22px rgba(46, 125, 50, 0.32);
+        }
+        .btn-submit:disabled {
+            background: #81c784;
+            box-shadow: none;
+            transform: none;
+            cursor: not-allowed;
+        }
+        .alert-error {
+            background: #fde8e8;
+            color: #9b1c1c;
+            border: 1px solid #f8b4b4;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 12.5px;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+        .bottom-link { font-size: 13px; color: #64748b; margin-top: 22px; }
+        .bottom-link a { color: #1b5e20; font-weight: 700; text-decoration: none; }
+        .bottom-link a:hover { text-decoration: underline; }
+    </style></head><body>
+    <div class="card">
+        <div class="logo-title">ECOTRACK</div>
+        <div class="subtitle">Crear Nueva Cuenta Ciudadana</div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div id="alertaServidor" class="alert-error">⚠️ @ViewBag.Error</div>
+        }
+        <div id="alertaCliente" class="alert-error" style="display:none;"></div>
+
+        <form id="formRegistro" method="post" action="/Usuarios/Registro" onsubmit="return validarRegistro(event)">
+            <div class="form-group">
+                <label>Nombre Completo</label>
+                <input type="text" id="regNombre" name="nombre" required minlength="3" maxlength="100" placeholder="Ej: Octavio Pérez" />
+            </div>
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                <input type="email" id="regCorreo" name="correo" required maxlength="120" placeholder="tu.correo@ejemplo.com" />
+            </div>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <div class="password-wrapper">
+                    <input type="password" id="regPass" name="contrasena" required minlength="8" maxlength="64" oninput="verificarRequisitos()" placeholder="Mínimo 8 caracteres" />
+                    <button type="button" class="toggle-password" onclick="alternarPassword('regPass', this)" title="Mostrar u ocultar contraseña">
+                        <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                </div>
+                <ul class="pwd-rules">
+                    <li id="ruleLen">○ Mín. 8 caracteres</li>
+                    <li id="ruleMay">○ Una mayúscula</li>
+                    <li id="ruleMin">○ Una minúscula</li>
+                    <li id="ruleNum">○ Un número</li>
+                </ul>
+            </div>
+
+            <button type="submit" id="btnRegistro" class="btn-submit">Registrarme</button>
+        </form>
+
+        <div class="bottom-link">
+            ¿Ya tienes cuenta? <a href="/Usuarios/Index">Inicia Sesión aquí</a>
+        </div>
+    </div>
+
+    <script>
+        function alternarPassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const esPassword = input.type === "password";
+            input.type = esPassword ? "text" : "password";
+
+            btn.innerHTML = esPassword 
+                ? `<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`
+                : `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+        }
+
+        function verificarRequisitos() {
+            const pass = document.getElementById('regPass').value;
+            actualizarRegla('ruleLen', pass.length >= 8, 'Mín. 8 caracteres');
+            actualizarRegla('ruleMay', /[A-Z]/.test(pass), 'Una mayúscula');
+            actualizarRegla('ruleMin', /[a-z]/.test(pass), 'Una minúscula');
+            actualizarRegla('ruleNum', /[0-9]/.test(pass), 'Un número');
+        }
+
+        function actualizarRegla(id, cumple, texto) {
+            const el = document.getElementById(id);
+            if (cumple) {
+                el.classList.add('ok');
+                el.innerText = '✓ ' + texto;
+            } else {
+                el.classList.remove('ok');
+                el.innerText = '○ ' + texto;
+            }
+        }
+
+        function validarRegistro(e) {
+            const nombre = document.getElementById('regNombre').value.trim();
+            const correo = document.getElementById('regCorreo').value.trim();
+            const pass = document.getElementById('regPass').value;
+            const alerta = document.getElementById('alertaCliente');
+            const alertaSrv = document.getElementById('alertaServidor');
+            const btn = document.getElementById('btnRegistro');
+
+            if (alertaSrv) alertaSrv.style.display = 'none';
+
+            const regexNombre = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,100}$/;
+            if (!regexNombre.test(nombre)) {
+                e.preventDefault();
+                alerta.innerText = "⚠️ Ingresa un nombre válido (mínimo 3 letras, sin números ni símbolos).";
+                alerta.style.display = "block";
+                return false;
+            }
+
+            const regexCorreo = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            if (!regexCorreo.test(correo)) {
+                e.preventDefault();
+                alerta.innerText = "⚠️ Ingresa un correo electrónico válido.";
+                alerta.style.display = "block";
+                return false;
+            }
+
+            if (pass.length < 8 || !/[A-Z]/.test(pass) || !/[a-z]/.test(pass) || !/[0-9]/.test(pass)) {
+                e.preventDefault();
+                alerta.innerText = "⚠️ La contraseña debe cumplir con los 4 requisitos (mínimo 8 caracteres, mayúscula, minúscula y número).";
+                alerta.style.display = "block";
+                return false;
+            }
+
+            alerta.style.display = "none";
+            btn.disabled = true;
+            btn.innerText = "Creando cuenta...";
+            return true;
+        }
+    </script></body></html>

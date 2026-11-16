@@ -1,0 +1,785 @@
+﻿@using System.Text.Json
+@{
+    Layout = null;
+    var nombre = ViewBag.UsuarioNombre ?? "Octavio";
+    var iniciales = ViewBag.UsuarioIniciales ?? "O";
+    var rol = ViewBag.UsuarioRol ?? "Administrador";
+    var misPuntos = ViewBag.MisPuntosActuales ?? 0;
+    var esAdmin = (rol ?? "").ToString().Trim().Equals("Administrador", StringComparison.OrdinalIgnoreCase);
+    var reportesJson = JsonSerializer.Serialize(ViewBag.Reportes ?? new List<dynamic>());
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monitoreo Territorial - ECOTRACK</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                font-family: 'Segoe UI', system-ui, sans-serif;
+            }
+
+            body {
+                display: flex;
+                height: 100vh;
+                background: #f4fbf5;
+                color: #143319;
+                overflow: hidden;
+            }
+
+            .sidebar {
+                width: 260px;
+                min-width: 260px;
+                background: #fff;
+                border-right: 1px solid #d9e7dc;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                z-index: 1000;
+            }
+
+            .brand-header {
+                padding: 22px;
+                font-size: 20px;
+                font-weight: 800;
+                color: #1b5e20;
+            }
+
+            .user-card {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin: 0 16px 20px;
+                padding: 12px 14px;
+                background: #e8f5e9;
+                border-radius: 12px;
+            }
+
+            .user-avatar {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                background: #2e7d32;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+            }
+
+            .points-badge {
+                display: inline-block;
+                background: #1b5e20;
+                color: #fff;
+                font-size: 11px;
+                font-weight: 800;
+                padding: 2px 7px;
+                border-radius: 10px;
+                margin-top: 3px;
+            }
+
+            .menu-heading {
+                font-size: 10.5px;
+                font-weight: 700;
+                color: #76a880;
+                padding: 12px 22px 6px;
+            }
+
+            .menu-link {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 10px 22px;
+                color: #385e3c;
+                text-decoration: none;
+                font-size: 13.5px;
+                font-weight: 600;
+            }
+
+                .menu-link.active {
+                    background: #e8f5e9;
+                    color: #1b5e20;
+                    border-left: 4px solid #2e7d32;
+                    font-weight: 700;
+                }
+
+                .menu-link.admin-btn {
+                    background: #0f2d18;
+                    color: #a3e635;
+                    border-radius: 8px;
+                    margin: 6px 14px;
+                    padding: 10px 14px;
+                    font-weight: 700;
+                }
+
+                    .menu-link.admin-btn:hover {
+                        background: #164e28;
+                    }
+
+            .map-wrapper {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                position: relative;
+            }
+
+            .top-nav {
+                height: 64px;
+                background: #fff;
+                border-bottom: 1px solid #d9e7dc;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 24px;
+                z-index: 500;
+            }
+
+            .top-title h2 {
+                font-size: 17px;
+                color: #1b5e20;
+                font-weight: 800;
+            }
+
+            .top-title p {
+                font-size: 12px;
+                color: #5a8262;
+            }
+
+            .top-actions {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .btn-top {
+                padding: 8px 16px;
+                border-radius: 8px;
+                font-size: 12.5px;
+                font-weight: 700;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                text-decoration: none;
+            }
+
+            .btn-center {
+                background: #e8f5e9;
+                color: #1b5e20;
+                border: 1px solid #c8e6c9;
+            }
+
+            .btn-report {
+                background: #2e7d32;
+                color: #fff;
+                box-shadow: 0 2px 6px rgba(46,125,50,0.3);
+            }
+
+                .btn-report:hover {
+                    background: #1b5e20;
+                }
+
+            .btn-admin-panel {
+                background: #0f2d18;
+                color: #a3e635;
+                border: 1px solid #143e20;
+            }
+
+                .btn-admin-panel:hover {
+                    background: #164e28;
+                }
+
+            .user-pts-top {
+                background: #f1f8f3;
+                border: 1px solid #c8e6c9;
+                color: #1b5e20;
+                padding: 7px 12px;
+                border-radius: 8px;
+                font-size: 12.5px;
+                font-weight: 800;
+            }
+
+            #map {
+                flex: 1;
+                width: 100%;
+                height: 100%;
+            }
+
+            .challenge-box {
+                background: #e8f5e9;
+                border: 1px solid #a5d6a7;
+                border-radius: 6px;
+                padding: 8px;
+                margin: 8px 0;
+                text-align: left;
+            }
+
+            .challenge-pts {
+                color: #1b5e20;
+                font-weight: 800;
+                font-size: 11.5px;
+                display: inline-block;
+                background: #c8e6c9;
+                padding: 2px 6px;
+                border-radius: 4px;
+                margin-top: 3px;
+            }
+
+            .modal-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 2000;
+                justify-content: center;
+                align-items: center;
+                padding: 15px;
+            }
+
+            .modal-card {
+                background: #fff;
+                width: 100%;
+                max-width: 480px;
+                border-radius: 16px;
+                padding: 24px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+                position: relative;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .modal-close {
+                position: absolute;
+                top: 18px;
+                right: 20px;
+                font-size: 22px;
+                border: none;
+                background: transparent;
+                cursor: pointer;
+                color: #777;
+            }
+
+            .form-group {
+                margin-bottom: 14px;
+            }
+
+                .form-group label {
+                    display: block;
+                    font-size: 12.5px;
+                    font-weight: 700;
+                    color: #2e5934;
+                    margin-bottom: 5px;
+                }
+
+                .form-group input, .form-group textarea, .form-group select {
+                    width: 100%;
+                    padding: 10px 12px;
+                    border: 1px solid #c8e6c9;
+                    border-radius: 8px;
+                    font-size: 13px;
+                    outline: none;
+                    background: #fff;
+                }
+
+            .form-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .btn-save {
+                width: 100%;
+                padding: 12px;
+                background: #2e7d32;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                font-weight: 700;
+                font-size: 14px;
+                cursor: pointer;
+                margin-top: 8px;
+            }
+
+            .share-bar {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-top: 14px;
+                padding-top: 12px;
+                border-top: 1px solid #edf4ee;
+            }
+
+            .btn-share {
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-size: 11.5px;
+                font-weight: 700;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+                text-decoration: none;
+            }
+
+            .btn-wa {
+                background: #25d366;
+            }
+
+            .btn-ig {
+                background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            }
+
+            .btn-native {
+                background: #1b5e20;
+            }
+
+            #notificacionBanner {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 3000;
+                max-width: 380px;
+                background: #fff;
+                border-left: 6px solid #2e7d32;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+                border-radius: 8px;
+                padding: 16px;
+                display: none;
+                animation: slideIn 0.3s ease-out forwards;
+            }
+
+                #notificacionBanner.error {
+                    border-left-color: #c62828;
+                }
+
+            @@keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+    </style>
+</head>
+<body>
+
+    <div id="notificacionBanner">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <b id="notifTitulo" style="font-size: 13.5px; color: #1b5e20;">Resultado de IA</b>
+            <button onclick="cerrarNotificacion()" style="border:none; background:transparent; font-size:16px; cursor:pointer; color:#777;">&times;</button>
+        </div>
+        <p id="notifTexto" style="font-size: 12.5px; color: #333; line-height: 1.4;"></p>
+    </div>
+
+    <aside class="sidebar">
+        <div>
+            <div class="brand-header">ECOTRACK</div>
+            <div class="user-card">
+                <div class="user-avatar">@iniciales</div>
+                <div>
+                    <div style="font-size:13.5px; font-weight:700; color:#1b5e20;">@nombre</div>
+                    <div style="font-size:11.5px; color:#4e7d55;">@rol</div>
+                    <span class="points-badge">🏆 @misPuntos pts</span>
+                </div>
+            </div>
+            <div class="menu-heading">MONITOREO & MAPA</div>
+            <a href="/Reportes/Index" class="menu-link active">🗺️ Mapa de Reportes</a>
+
+            <div class="menu-heading">PANEL DE CONTROL</div>
+            @if (esAdmin)
+            {
+                <a href="/Admin/Index" class="menu-link admin-btn">📊 Regresar a Mi Panel Admin</a>
+                <a href="/Admin/Usuarios" class="menu-link">👥 Auditoría de Usuarios</a>
+                <a href="/Admin/Retos" class="menu-link">🌱 Catálogo de Retos</a>
+                <a href="/Admin/Participantes" class="menu-link">🤝 Registro Participantes</a>
+                <a href="/Admin/Puntos" class="menu-link">🏆 Control de Puntos</a>
+            }
+            else
+            {
+                <a href="/Usuarios/Lista" class="menu-link">👤 Mi Perfil y Retos</a>
+            }
+        </div>
+        <div style="padding: 18px 22px; border-top: 1px solid #edf4ee;">
+            <a href="/Usuarios/CerrarSesion" style="color: #c62828; text-decoration:none; font-size:13px; font-weight:600;">🚪 Cerrar Sesión</a>
+        </div>
+    </aside>
+
+    <div class="map-wrapper">
+        <header class="top-nav">
+            <div class="top-title">
+                <h2>Monitoreo Territorial en Tiempo Real</h2>
+                <p>Haz clic en cualquier punto del mapa para seleccionar la ubicación exacta</p>
+            </div>
+            <div class="top-actions">
+                <div class="user-pts-top">Mis Puntos: 🏆 @misPuntos</div>
+                @if (esAdmin)
+                {
+                    <a href="/Admin/Index" class="btn-top btn-admin-panel">⬅ Panel Admin</a>
+                }
+                <button type="button" class="btn-top btn-center" onclick="centrarEnTecamac()">📍 Centrar</button>
+                <button type="button" class="btn-top btn-report" onclick="levantarReporteCentro()">➕ Levantar Reporte</button>
+            </div>
+        </header>
+
+        <div id="map"></div>
+    </div>
+
+    <!-- MODAL NUEVO REPORTE -->
+    <div id="modalReporte" class="modal-overlay">
+        <div class="modal-card">
+            <button class="modal-close" onclick="cerrarModal('modalReporte')">&times;</button>
+            <h3 style="color:#1b5e20; margin-bottom:4px;">Registrar Incidencia Territorial</h3>
+            <p style="font-size:12px; color:#5a8262; margin-bottom:14px;">Al guardar, la incidencia se registrará en la base de datos y se publicará el reto con 100 pts automáticamente.</p>
+
+            <form id="formNuevoReporte" onsubmit="enviarReporteAjax(event)">
+                <div class="form-group">
+                    <label>Título de la Incidencia</label>
+                    <input type="text" id="repTitulo" name="titulo" required placeholder="Ej: Fuga de agua en mi calle, Basurero clandestino" />
+                </div>
+                <div class="form-group">
+                    <label>Categoría de Incidencia</label>
+                    <select id="repCategoria" name="idCategoria" required>
+                        @if (ViewBag.Categorias != null)
+                        {
+                            foreach (var cat in ViewBag.Categorias)
+                            {
+                                <option value="@cat.Id">@cat.Nombre</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="1">Acumulación de Basura</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Descripción detallada</label>
+                    <textarea id="repDesc" name="descripcion" rows="3" placeholder="Detalles de la afectación ambiental..."></textarea>
+                </div>
+                <div class="form-row form-group">
+                    <div>
+                        <label>Latitud</label>
+                        <input type="text" id="repLat" name="latitud" readonly />
+                    </div>
+                    <div>
+                        <label>Longitud</label>
+                        <input type="text" id="repLng" name="longitud" readonly />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Evidencia Fotográfica (Opcional)</label>
+                    <input type="file" id="repFoto" name="fotoEvidencia" accept="image/*" />
+                </div>
+
+                <button type="submit" id="btnGuardar" class="btn-save">Guardar Incidencia y Publicar Reto</button>
+
+                <div class="share-bar">
+                    <span style="font-size:11.5px; color:#555;">Difundir en redes:</span>
+                    <button type="button" class="btn-share btn-wa" onclick="compartirWhatsApp()">WhatsApp</button>
+                    <button type="button" class="btn-share btn-ig" onclick="compartirInstagram()">Instagram</button>
+                    <button type="button" class="btn-share btn-native" onclick="compartirNativo()">Compartir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EVIDENCIA RETO (IA) -->
+    <div id="modalEvidenciaReto" class="modal-overlay">
+        <div class="modal-card">
+            <button class="modal-close" onclick="cerrarModal('modalEvidenciaReto')">&times;</button>
+            <h3 style="color:#1b5e20; margin-bottom:4px;">Completar Reto y Subir Evidencia</h3>
+            <p style="font-size:12px; color:#5a8262; margin-bottom:14px;">Sube una foto comprobando que la incidencia fue resuelta. La IA la analizará para otorgar tus puntos.</p>
+
+            <form id="formEvidenciaReto" onsubmit="enviarEvidenciaRetoAjax(event)">
+                <input type="hidden" id="retoIdInput" name="id_reto" />
+
+                <div class="form-group">
+                    <label>Foto de Evidencia (Solución)</label>
+                    <input type="file" name="fotoSolucion" accept="image/*" required />
+                </div>
+
+                <button type="submit" id="btnGuardarEvidencia" class="btn-save">Enviar Evidencia y Reclamar Puntos</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+            const tecamacCoord = [19.7150, -98.9680];
+            const map = L.map('map').setView(tecamacCoord, 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
+
+            function generarContenidoPopup(r) {
+                let imgHtml = r.Foto ? `<div style="margin-top:6px;"><span style="font-size:11px; color:#555; font-weight:600;">Evidencia / Solución:</span><img src="${r.Foto}" style="width:100%; max-height:110px; object-fit:cover; border-radius:6px; margin-top:3px;"/></div>` : '';
+
+                const esResuelto = (r.Estatus === 'Resuelto');
+                const estatusColor = esResuelto ? '#2e7d32' : '#e65100';
+
+                const botonHtml = esResuelto
+                    ? `<div style="background:#c8e6c9; color:#1b5e20; text-align:center; padding:6px; border-radius:4px; font-size:11.5px; font-weight:800; margin-top:6px;">✅ Reto Resuelto y Verificado</div>`
+                    : `<button type="button" onclick="prepararEvidenciaReto(${r.IdReto || r.Id})" style="width:100%; background:#1b5e20; color:#fff; border:none; padding:6px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; margin-top:6px;">
+                            📸 Subir Evidencia y Resolver
+                       </button>`;
+
+                return `
+                    <div style="font-size:13px; line-height:1.4; min-width:210px;">
+                        <b style="color:#1b5e20; font-size:14px;">${r.Titulo}</b><br/>
+                        <span style="font-size:11.5px; color:#555;">Estatus: <b style="color:${estatusColor};">${r.Estatus}</b></span>
+                        ${imgHtml}
+                        <div class="challenge-box">
+                            <span style="font-size:11px; color:#2e7d32; font-weight:700;">🌱 RETO COMUNITARIO</span><br/>
+                            <b style="font-size:12.5px; color:#143319;">${r.TituloReto || r.Titulo}</b><br/>
+                            <span class="challenge-pts">Recompensa: +${r.PuntosReto || 100} pts</span>
+                            ${botonHtml}
+                        </div>
+                        <div style="margin-top:6px;">
+                            <button onclick="compartirPunto('${r.Titulo}', ${r.Latitud}, ${r.Longitud})"
+                                    style="background:#2e7d32; color:#fff; border:none; padding:5px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; width:100%;">
+                                Compartir en Redes
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Diccionario global para rastrear y eliminar pines activos por su ID
+            window.marcadoresMapa = {};
+
+            // Renderizar todos los reportes activos desde Neon (los resueltos ya vienen filtrados desde C#)
+            const reportes = @Html.Raw(reportesJson);
+            reportes.forEach(r => {
+                const marker = L.marker([r.Latitud, r.Longitud]).addTo(map);
+                marker.bindPopup(generarContenidoPopup(r));
+                window.marcadoresMapa[r.Id] = marker;
+            });
+
+            function prepararEvidenciaReto(idReto) {
+                document.getElementById('retoIdInput').value = idReto;
+                abrirModal('modalEvidenciaReto');
+            }
+
+            function enviarReporteAjax(e) {
+                e.preventDefault();
+
+                const btn = document.getElementById('btnGuardar');
+                btn.disabled = true;
+                btn.innerText = "Registrando en Neon...";
+
+                const formData = new FormData(document.getElementById('formNuevoReporte'));
+
+                fetch('/Reportes/GuardarReporte', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    btn.disabled = false;
+                    btn.innerText = "Guardar Incidencia y Publicar Reto";
+
+                    if (data && data.success && data.reporte) {
+                        cerrarModal('modalReporte');
+
+                        const nuevo = data.reporte;
+                        const nuevoMarker = L.marker([nuevo.Latitud, nuevo.Longitud]).addTo(map);
+                        nuevoMarker.bindPopup(generarContenidoPopup(nuevo)).openPopup();
+
+                        // Guardamos el nuevo marcador en el diccionario global por su ID
+                        window.marcadoresMapa[nuevo.Id] = nuevoMarker;
+
+                        map.setView([nuevo.Latitud, nuevo.Longitud], 15);
+                        document.getElementById('formNuevoReporte').reset();
+                        mostrarNotificacionWeb(true, "¡Incidencia guardada y reto publicado en el mapa!");
+                    } else {
+                        cerrarModal('modalReporte');
+                        mostrarNotificacionWeb(false, data.message || "Error al guardar la incidencia.");
+                    }
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btn.innerText = "Guardar Incidencia y Publicar Reto";
+                    console.error("Detalle técnico en consola:", err);
+                    cerrarModal('modalReporte');
+                    mostrarNotificacionWeb(false, "Error de comunicación con el servidor.");
+                });
+            }
+
+            function enviarEvidenciaRetoAjax(e) {
+                e.preventDefault();
+
+                const btn = document.getElementById('btnGuardarEvidencia');
+                btn.disabled = true;
+                btn.innerText = "Analizando foto con IA...";
+
+                const formData = new FormData(document.getElementById('formEvidenciaReto'));
+
+                fetch('/Reportes/CompletarRetoConEvidencia', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    btn.disabled = false;
+                    btn.innerText = "Enviar Evidencia y Reclamar Puntos";
+                    cerrarModal('modalEvidenciaReto');
+                    document.getElementById('formEvidenciaReto').reset();
+
+                    mostrarNotificacionWeb(data.success, data.message);
+
+                    if (data.success) {
+                        // 1. BORRAR EL PIN DEL MAPA DE INMEDIATO
+                        if (data.idReporte && window.marcadoresMapa[data.idReporte]) {
+                            map.removeLayer(window.marcadoresMapa[data.idReporte]);
+                            delete window.marcadoresMapa[data.idReporte];
+                        }
+
+                        // 2. ACTUALIZAR VISUALMENTE LOS PUNTOS EN PANTALLA SIN RECARGAR
+                        const puntosGanados = data.puntosGanados || 100;
+                        const badgeSidebar = document.querySelector('.points-badge');
+                        const badgeTop = document.querySelector('.user-pts-top');
+
+                        if (badgeSidebar) {
+                            const actual = parseInt(badgeSidebar.innerText.replace(/\D/g, '')) || 0;
+                            badgeSidebar.innerText = `🏆 ${actual + puntosGanados} pts`;
+                        }
+                        if (badgeTop) {
+                            const actualTop = parseInt(badgeTop.innerText.replace(/\D/g, '')) || 0;
+                            badgeTop.innerText = `Mis Puntos: 🏆 ${actualTop + puntosGanados}`;
+                        }
+                    }
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btn.innerText = "Enviar Evidencia y Reclamar Puntos";
+                    console.error(err);
+                    cerrarModal('modalEvidenciaReto');
+                    mostrarNotificacionWeb(false, "Ocurrió un error al procesar la imagen con la inteligencia artificial.");
+                });
+            }
+
+            function mostrarNotificacionWeb(esExito, mensaje) {
+                const banner = document.getElementById('notificacionBanner');
+                const titulo = document.getElementById('notifTitulo');
+                const texto = document.getElementById('notifTexto');
+
+                texto.innerText = mensaje;
+
+                if (esExito) {
+                    banner.classList.remove('error');
+                    titulo.innerText = "🌱 ¡Operación Exitosa!";
+                    titulo.style.color = "#1b5e20";
+                } else {
+                    banner.classList.add('error');
+                    titulo.innerText = "❌ Aviso del Sistema";
+                    titulo.style.color = "#c62828";
+                }
+
+                banner.style.display = 'block';
+
+                setTimeout(() => {
+                    cerrarNotificacion();
+                }, 5000);
+            }
+
+            function cerrarNotificacion() {
+                document.getElementById('notificacionBanner').style.display = 'none';
+            }
+
+            // EVENTO PARA COLOCAR PINES NUEVOS AL HACER CLIC EN EL MAPA
+            let marcadorTemporal = null;
+            map.on('click', function(e) {
+                const lat = e.latlng.lat.toFixed(6);
+                const lng = e.latlng.lng.toFixed(6);
+
+                document.getElementById('repLat').value = lat;
+                document.getElementById('repLng').value = lng;
+
+                if (marcadorTemporal) {
+                    map.removeLayer(marcadorTemporal);
+                }
+                marcadorTemporal = L.marker([lat, lng]).addTo(map);
+
+                abrirModal('modalReporte');
+            });
+
+            function centrarEnTecamac() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        pos => map.setView([pos.coords.latitude, pos.coords.longitude], 15),
+                        () => map.setView(tecamacCoord, 13)
+                    );
+                } else {
+                    map.setView(tecamacCoord, 13);
+                }
+            }
+
+            function levantarReporteCentro() {
+                const center = map.getCenter();
+                document.getElementById('repLat').value = center.lat.toFixed(6);
+                document.getElementById('repLng').value = center.lng.toFixed(6);
+                abrirModal('modalReporte');
+            }
+
+            function abrirModal(id) { document.getElementById(id).style.display = 'flex'; }
+
+            function cerrarModal(id) {
+                document.getElementById(id).style.display = 'none';
+                if (id === 'modalReporte' && marcadorTemporal) {
+                    map.removeLayer(marcadorTemporal);
+                    marcadorTemporal = null;
+                }
+            }
+
+            function compartirWhatsApp() {
+                const tit = document.getElementById('repTitulo').value || 'Incidencia';
+                const lat = document.getElementById('repLat').value;
+                const lng = document.getElementById('repLng').value;
+                const msg = encodeURIComponent(`🚨 *ECOTRACK Tecámac*\nIncidencia: ${tit}\nUbicación: https://maps.google.com/?q=${lat},${lng}`);
+                window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+            }
+
+            function compartirInstagram() {
+                const tit = document.getElementById('repTitulo').value || 'Incidencia';
+                const lat = document.getElementById('repLat').value;
+                const lng = document.getElementById('repLng').value;
+                const texto = `🚨 ECOTRACK Tecámac: ${tit} (Ubicación: https://maps.google.com/?q=${lat},${lng})`;
+
+                navigator.clipboard.writeText(texto).then(() => {
+                    alert('¡Enlace y reporte copiado al portapapeles!\nPégalo en tu Historia o Publicación de Instagram.');
+                    window.open('https://www.instagram.com/', '_blank');
+                });
+            }
+
+            function compartirNativo() {
+                const tit = document.getElementById('repTitulo').value || 'Incidencia';
+                const lat = document.getElementById('repLat').value;
+                const lng = document.getElementById('repLng').value;
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'EcoTrack Tecámac',
+                        text: `Reporte de incidencia: ${tit}`,
+                        url: `https://maps.google.com/?q=${lat},${lng}`
+                    });
+                } else {
+                    compartirInstagram();
+                }
+            }
+
+            function compartirPunto(tit, lat, lng) {
+                const msg = encodeURIComponent(`🚨 *ECOTRACK Tecámac*: ${tit}\nVer en mapa: https://maps.google.com/?q=${lat},${lng}`);
+                window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+            }
+    </script>
+</body>
+</html>

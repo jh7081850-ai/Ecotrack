@@ -1,0 +1,131 @@
+﻿@{
+    Layout = null;
+    var nombre = ViewBag.UsuarioNombre ?? "Ciudadano";
+    var iniciales = ViewBag.UsuarioIniciales ?? "C";
+    var rol = ViewBag.UsuarioRol ?? "Ciudadano";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Perfil Ciudadano - ECOTRACK</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { display: flex; height: 100vh; background: #f4fbf5; color: #143319; }
+
+        .sidebar { width: 260px; min-width: 260px; background: #fff; border-right: 1px solid #d9e7dc; display: flex; flex-direction: column; justify-content: space-between; z-index: 1000; }
+        .brand-header { padding: 22px; font-size: 20px; font-weight: 800; color: #1b5e20; }
+        .user-card { display: flex; align-items: center; gap: 12px; margin: 0 16px 20px; padding: 12px 14px; background: #e8f5e9; border-radius: 12px; }
+        .user-avatar { width: 38px; height: 38px; border-radius: 50%; background: #2e7d32; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .menu-heading { font-size: 10.5px; font-weight: 700; color: #76a880; padding: 12px 22px 6px; }
+        .menu-link { display: flex; align-items: center; gap: 12px; padding: 10px 22px; color: #385e3c; text-decoration: none; font-size: 13.5px; font-weight: 600; }
+        .menu-link.active { background: #e8f5e9; color: #1b5e20; border-left: 4px solid #2e7d32; font-weight: 700; }
+
+        .main-content { flex: 1; overflow-y: auto; padding: 28px 34px; }
+        .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 28px; }
+        .kpi-card { background: #fff; border-radius: 14px; padding: 20px; border: 1px solid #d9e7dc; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+        .kpi-label { font-size: 11px; font-weight: 700; color: #4e7d55; text-transform: uppercase; }
+        .kpi-number { font-size: 32px; font-weight: 800; color: #1b5e20; margin: 6px 0; }
+        .kpi-sub { font-size: 12px; font-weight: 600; color: #2e7d32; }
+
+        .panel-box { background: #fff; border-radius: 14px; border: 1px solid #d9e7dc; padding: 22px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 15px; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #edf4ee; }
+        th { background: #f4fbf5; color: #2e5934; font-weight: 700; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .b-ok { background: #dcfce7; color: #15803d; }
+        .b-prog { background: #e0f2fe; color: #0369a1; }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div>
+        <div class="brand-header">ECOTRACK</div>
+        <div class="user-card">
+            <div class="user-avatar">@iniciales</div>
+            <div>
+                <div style="font-size:13.5px; font-weight:700; color:#1b5e20;">@nombre</div>
+                <div style="font-size:11.5px; color:#4e7d55;">@rol</div>
+            </div>
+        </div>
+        <div class="menu-heading">MONITOREO & MAPA</div>
+        <a href="/Reportes/Index" class="menu-link">🗺️ Mapa de Reportes</a>
+        
+        <div class="menu-heading">MI ESPACIO ECOLÓGICO</div>
+        <a href="/Usuarios/Lista" class="menu-link active">👤 Mi Perfil y Retos</a>
+    </div>
+    <div style="padding: 18px 22px; border-top: 1px solid #edf4ee;">
+        <a href="/Usuarios/CerrarSesion" style="color: #c62828; text-decoration:none; font-size:13px; font-weight:600;">🚪 Cerrar Sesión</a>
+    </div>
+</aside>
+
+<main class="main-content">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+        <div>
+            <h2 style="font-size: 24px; color: #1b5e20;">Mi Perfil y Participación</h2>
+            <p style="font-size: 13px; color: #4e7d55;">Resumen de tu colaboración comunitaria en Tecámac</p>
+        </div>
+        <a href="/Reportes/Index" style="background:#2e7d32; color:#fff; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:700; font-size:13px;">🗺️ Ir al Mapa Territorial</a>
+    </div>
+
+    <div class="kpi-row">
+        <div class="kpi-card">
+            <div class="kpi-label">Puntos Ecológicos Acumulados</div>
+            <div class="kpi-number">@ViewBag.PuntosTotales pts</div>
+            <div class="kpi-sub">Ganados por reportes y retos</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Incidencias Reportadas</div>
+            <div class="kpi-number">@ViewBag.MisReportes</div>
+            <div class="kpi-sub">Enviadas a inspección</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Retos Comunitarios</div>
+            <div class="kpi-number">@(ViewBag.RetosInscritos != null ? ViewBag.RetosInscritos.Count : 0)</div>
+            <div class="kpi-sub">Campañas inscritas</div>
+        </div>
+    </div>
+
+    <div class="panel-box">
+        <h3 style="font-size: 17px; color: #1b5e20;">Mis Retos Ecológicos Inscritos</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Reto</th>
+                    <th>Descripción</th>
+                    <th>Rol en Reto</th>
+                    <th>Puntos Recompensa</th>
+                    <th>Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.RetosInscritos != null && ViewBag.RetosInscritos.Count > 0)
+                {
+                    foreach (var r in ViewBag.RetosInscritos)
+                    {
+                        <tr>
+                            <td style="font-weight:700;">@r.Titulo</td>
+                            <td>@r.Descripcion</td>
+                            <td>@r.Rol</td>
+                            <td style="color:#2e7d32; font-weight:800;">+@r.Puntos pts</td>
+                            <td><span class="badge @(r.Estado == "Acreditado" ? "b-ok" : "b-prog")">@r.Estado</span></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" style="text-align:center; color:#777; padding:20px;">
+                            No estás inscrito en ningún reto actualmente. Explora el mapa para unirte a brigadas o reportar incidencias.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</main>
+
+</body>
+</html>

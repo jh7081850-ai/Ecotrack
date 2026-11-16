@@ -1,0 +1,8 @@
+# Visual Studio / .vs cache
+.vs/
+bin/
+obj/
+
+# Archivos de configuración de usuario o secretos
+*.user
+appsettings.Development.json
