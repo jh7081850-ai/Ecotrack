@@ -60,7 +60,6 @@ namespace Integradora.Controllers
             return View();
         }
 
-        // Login con validación de formato y longitud mínima
         [HttpPost]
         public IActionResult Login(string correo, string contrasena)
         {
@@ -158,7 +157,6 @@ namespace Integradora.Controllers
             return View();
         }
 
-        // PASO 1 DEL REGISTRO: Valida los datos, verifica que no exista en Neon y envía el código de 6 dígitos por Gmail
         [HttpPost]
         public IActionResult EnviarCodigoVerificacion(string nombre, string correo, string contrasena)
         {
@@ -190,7 +188,6 @@ namespace Integradora.Controllers
 
             try
             {
-                // 1. Revisar que el correo no esté ya registrado en Neon PostgreSQL
                 using (var conn = new NpgsqlConnection(connectionString))
                 {
                     conn.Open();
@@ -205,18 +202,14 @@ namespace Integradora.Controllers
                     }
                 }
 
-                // 2. Generar código aleatorio de 6 dígitos
                 string codigo = new Random().Next(100000, 999999).ToString();
 
-                // 3. Usar las credenciales fijas de Gmail
                 string remitenteGmail = CorreoGmailPorDefecto;
                 string passApp = PasswordAppGmail;
 
-                // 4. Configurar seguridad SSL local para evitar bloqueos en localhost o servidores en la nube
                 ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
 
-                // 5. Enviar correo real usando el servidor SMTP de Gmail
                 var mail = new MailMessage();
                 mail.From = new MailAddress(remitenteGmail, "EcoTrack Monitoreo Ambiental");
                 mail.To.Add(emailLimpio);
@@ -239,11 +232,10 @@ namespace Integradora.Controllers
                     smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                     smtp.UseDefaultCredentials = false;
                     smtp.Credentials = new NetworkCredential(remitenteGmail, passApp);
-                    smtp.Timeout = 20000;
+                    smtp.Timeout = 30000;
                     smtp.Send(mail);
                 }
 
-                // 6. Guardar temporalmente en Sesión esperando a que el usuario ingrese los 6 dígitos
                 HttpContext.Session.SetString("TempRegNombre", nombreLimpio);
                 HttpContext.Session.SetString("TempRegCorreo", emailLimpio);
                 HttpContext.Session.SetString("TempRegPass", passLimpio);
@@ -258,7 +250,6 @@ namespace Integradora.Controllers
             }
         }
 
-        // PASO 2 DEL REGISTRO: Comprueba el código de 6 dígitos y, si es correcto, guarda el usuario en Neon PostgreSQL
         [HttpPost]
         public IActionResult ConfirmarCodigoYRegistrar(string codigo)
         {
@@ -278,7 +269,6 @@ namespace Integradora.Controllers
                 return Json(new { ok = false, mensaje = "❌ El código de 6 dígitos es incorrecto. Verifica e intenta de nuevo." });
             }
 
-            // Dividir inteligentemente el Nombre Completo para cumplir con las 3 columnas de tu BD
             string nombreBD = nombreLimpio;
             string apellidoPaternoBD = "Ciudadano";
             string apellidoMaternoBD = "";
@@ -326,13 +316,11 @@ namespace Integradora.Controllers
                         newId = Convert.ToInt32(cmd.ExecuteScalar());
                     }
 
-                    // Limpiar datos temporales de registro
                     HttpContext.Session.Remove("TempRegCodigo");
                     HttpContext.Session.Remove("TempRegNombre");
                     HttpContext.Session.Remove("TempRegCorreo");
                     HttpContext.Session.Remove("TempRegPass");
 
-                    // Iniciar sesión automáticamente para el nuevo ciudadano verificado
                     string iniciales = "U";
                     if (partes.Length > 1)
                         iniciales = $"{char.ToUpper(partes[0][0])}{char.ToUpper(partes[partes.Length - 1][0])}";
