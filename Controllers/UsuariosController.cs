@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace Integradora.Controllers
@@ -157,32 +159,26 @@ namespace Integradora.Controllers
             return View();
         }
 
+        private const string UrlPuenteGmail = "https://script.google.com/macros/s/AKfycby2xnS16v6oc5JQvdFUeRTwUtOjCpDr8RcigMRypj03OlL78TNI4kZuFzBzU3-9IAcH/exec";
+
         [HttpPost]
-        public IActionResult EnviarCodigoVerificacion(string nombre, string correo, string contrasena)
+        public async Task<IActionResult> EnviarCodigoVerificacion(string nombre, string correo, string contrasena)
         {
             string emailLimpio = (correo ?? "").Trim().ToLower();
             string passLimpio = (contrasena ?? "").Trim();
             string nombreLimpio = (nombre ?? "").Trim();
 
             if (string.IsNullOrEmpty(emailLimpio) || string.IsNullOrEmpty(passLimpio) || string.IsNullOrEmpty(nombreLimpio))
-            {
                 return Json(new { ok = false, mensaje = "Por favor completa todos los campos." });
-            }
 
             if (!EsNombreValido(nombreLimpio))
-            {
                 return Json(new { ok = false, mensaje = "El nombre debe tener al menos 3 letras y no contener números ni símbolos." });
-            }
 
             if (!EsCorreoValido(emailLimpio))
-            {
                 return Json(new { ok = false, mensaje = "Ingresa un correo electrónico válido (ejemplo@dominio.com)." });
-            }
 
             if (!EsContrasenaSegura(passLimpio))
-            {
                 return Json(new { ok = false, mensaje = "La contraseña debe tener mínimo 8 caracteres, e incluir mayúscula, minúscula y número." });
-            }
 
             string connectionString = _configuration.GetConnectionString("NeonDb");
 
@@ -196,26 +192,13 @@ namespace Integradora.Controllers
                         checkCmd.Parameters.AddWithValue("@correo", emailLimpio);
                         int count = Convert.ToInt32(checkCmd.ExecuteScalar());
                         if (count > 0)
-                        {
                             return Json(new { ok = false, mensaje = "Este correo electrónico ya se encuentra registrado en EcoTrack." });
-                        }
                     }
                 }
 
                 string codigo = new Random().Next(100000, 999999).ToString();
 
-                string remitenteGmail = CorreoGmailPorDefecto;
-                string passApp = PasswordAppGmail;
-
-                ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
-
-                var mail = new MailMessage();
-                mail.From = new MailAddress(remitenteGmail, "EcoTrack Monitoreo Ambiental");
-                mail.To.Add(emailLimpio);
-                mail.Subject = "Código de Verificación de Cuenta - EcoTrack";
-                mail.IsBodyHtml = true;
-                mail.Body = $@"
+                string cuerpoHtml = $@"
                     <div style='font-family:Segoe UI,Arial,sans-serif; max-width:460px; margin:auto; padding:24px; border:1px solid #d9e7dc; border-radius:16px; background:#ffffff;'>
                         <h2 style='color:#1b5e20; margin-top:0; text-align:center;'>🌱 ECOTRACK</h2>
                         <p style='color:#333; font-size:14px;'>Hola <b>{nombreLimpio}</b>,</p>
@@ -226,14 +209,22 @@ namespace Integradora.Controllers
                         <p style='color:#64748b; font-size:11.5px; text-align:center; margin-bottom:0;'>Si tú no solicitaste este registro en EcoTrack, ignora este correo.</p>
                     </div>";
 
-                using (var smtp = new SmtpClient("smtp.gmail.com", 587))
+                var payload = new
                 {
-                    smtp.EnableSsl = true;
-                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    smtp.UseDefaultCredentials = false;
-                    smtp.Credentials = new NetworkCredential(remitenteGmail, passApp);
-                    smtp.Timeout = 30000;
-                    smtp.Send(mail);
+                    destinatario = emailLimpio,
+                    asunto = "Código de Verificación de Cuenta - EcoTrack",
+                    cuerpoHtml = cuerpoHtml
+                };
+
+                var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+
+                using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(25) })
+                {
+                    var response = await client.PostAsync(UrlPuenteGmail, content);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        return Json(new { ok = false, mensaje = "Error al conectar con el puente de correo HTTP." });
+                    }
                 }
 
                 HttpContext.Session.SetString("TempRegNombre", nombreLimpio);
@@ -245,8 +236,7 @@ namespace Integradora.Controllers
             }
             catch (Exception ex)
             {
-                string detalleReal = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                return Json(new { ok = false, mensaje = "No se pudo enviar el correo de verificación. Detalle: " + detalleReal });
+                return Json(new { ok = false, mensaje = "Error al enviar el código: " + ex.Message });
             }
         }
 
