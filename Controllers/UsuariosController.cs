@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
 
 namespace Integradora.Controllers
@@ -12,12 +14,17 @@ namespace Integradora.Controllers
     {
         private readonly IConfiguration _configuration;
 
+        // Contraseña de aplicación de 16 letras generada en Google (sin espacios)
+        private const string PasswordAppGmail = "mpetvnhdtwemmect";
+
+        // ⚠️ IMPORTANTE: Pon aquí el correo Gmail exacto donde generaste la contraseña de arriba
+        private const string CorreoGmailPorDefecto = "jh7081850@gmail.com";
+
         public UsuariosController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-       
         private bool EsCorreoValido(string correo)
         {
             if (string.IsNullOrWhiteSpace(correo)) return false;
@@ -43,7 +50,6 @@ namespace Integradora.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            
             int? idUsuario = HttpContext.Session.GetInt32("UsuarioId");
             string rol = HttpContext.Session.GetString("UsuarioRol");
             if (idUsuario != null && idUsuario > 0 && !string.IsNullOrEmpty(rol))
@@ -109,7 +115,6 @@ namespace Integradora.Controllers
                                 string nombreReal = reader["nombre"]?.ToString() ?? "Usuario";
                                 string rolUser = reader["rol"]?.ToString() ?? "Ciudadano";
 
-                            
                                 string iniciales = "U";
                                 var partes = nombreReal.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
                                 if (partes.Length > 1)
@@ -126,7 +131,6 @@ namespace Integradora.Controllers
                                 HttpContext.Session.SetString("UsuarioIniciales", iniciales);
                                 HttpContext.Session.SetString("UsuarioRol", rolUser);
 
-                               
                                 if (rolUser.Trim().Equals("Administrador", StringComparison.OrdinalIgnoreCase))
                                 {
                                     return RedirectToAction("Index", "Admin");
@@ -150,17 +154,15 @@ namespace Integradora.Controllers
             return View("Index");
         }
 
-        
         [HttpGet]
         public IActionResult Registro()
         {
             return View();
         }
 
-
-        // Procesa el Registro con validaciones completas y división inteligente de nombres
+        // PASO 1 DEL REGISTRO: Valida los datos, verifica que no exista en Neon y envía el código de 6 dígitos por Gmail
         [HttpPost]
-        public IActionResult Registro(string nombre, string correo, string contrasena)
+        public IActionResult EnviarCodigoVerificacion(string nombre, string correo, string contrasena)
         {
             string emailLimpio = (correo ?? "").Trim().ToLower();
             string passLimpio = (contrasena ?? "").Trim();
@@ -168,50 +170,139 @@ namespace Integradora.Controllers
 
             if (string.IsNullOrEmpty(emailLimpio) || string.IsNullOrEmpty(passLimpio) || string.IsNullOrEmpty(nombreLimpio))
             {
-                ViewBag.Error = "Por favor completa todos los campos.";
-                return View();
+                return Json(new { ok = false, mensaje = "Por favor completa todos los campos." });
             }
 
             if (!EsNombreValido(nombreLimpio))
             {
-                ViewBag.Error = "El nombre debe tener al menos 3 letras y no contener números ni símbolos.";
-                return View();
+                return Json(new { ok = false, mensaje = "El nombre debe tener al menos 3 letras y no contener números ni símbolos." });
             }
 
             if (!EsCorreoValido(emailLimpio))
             {
-                ViewBag.Error = "Ingresa un correo electrónico válido (ejemplo@dominio.com).";
-                return View();
+                return Json(new { ok = false, mensaje = "Ingresa un correo electrónico válido (ejemplo@dominio.com)." });
             }
 
             if (!EsContrasenaSegura(passLimpio))
             {
-                ViewBag.Error = "La contraseña debe tener mínimo 8 caracteres, e incluir al menos una mayúscula, una minúscula y un número.";
-                return View();
+                return Json(new { ok = false, mensaje = "La contraseña debe tener mínimo 8 caracteres, e incluir mayúscula, minúscula y número." });
             }
 
-            // Dividir inteligentemente el Nombre Completo para cumplir con las columnas de la BD
+            string connectionString = _configuration.GetConnectionString("NeonDb");
+
+            try
+            {
+                // 1. Revisar que el correo no esté ya registrado en Neon PostgreSQL
+                using (var conn = new NpgsqlConnection(connectionString))
+                {
+                    conn.Open();
+                    using (var checkCmd = new NpgsqlCommand("SELECT COUNT(*) FROM usuarios WHERE LOWER(TRIM(correo)) = @correo;", conn))
+                    {
+                        checkCmd.Parameters.AddWithValue("@correo", emailLimpio);
+                        int count = Convert.ToInt32(checkCmd.ExecuteScalar());
+                        if (count > 0)
+                        {
+                            return Json(new { ok = false, mensaje = "Este correo electrónico ya se encuentra registrado en EcoTrack." });
+                        }
+                    }
+                }
+
+                // 2. Generar código aleatorio de 6 dígitos
+                string codigo = new Random().Next(100000, 999999).ToString();
+
+                // 3. Tomar el correo remitente de appsettings.json o usar la constante de arriba
+                string remitenteGmail = _configuration["CorreoConfig:Remitente"];
+                if (string.IsNullOrWhiteSpace(remitenteGmail) || remitenteGmail.Contains("pon_aqui"))
+                {
+                    remitenteGmail = CorreoGmailPorDefecto;
+                }
+
+                string passApp = _configuration["CorreoConfig:PasswordApp"];
+                if (string.IsNullOrWhiteSpace(passApp))
+                {
+                    passApp = PasswordAppGmail;
+                }
+                passApp = passApp.Replace(" ", "").Trim();
+
+                // 4. Enviar correo real usando el servidor SMTP de Gmail
+                var mail = new MailMessage();
+                mail.From = new MailAddress(remitenteGmail, "EcoTrack Monitoreo Ambiental");
+                mail.To.Add(emailLimpio);
+                mail.Subject = "Código de Verificación de Cuenta - EcoTrack";
+                mail.IsBodyHtml = true;
+                mail.Body = $@"
+                    <div style='font-family:Segoe UI,Arial,sans-serif; max-width:460px; margin:auto; padding:24px; border:1px solid #d9e7dc; border-radius:16px; background:#ffffff;'>
+                        <h2 style='color:#1b5e20; margin-top:0; text-align:center;'>🌱 ECOTRACK</h2>
+                        <p style='color:#333; font-size:14px;'>Hola <b>{nombreLimpio}</b>,</p>
+                        <p style='color:#4b6352; font-size:13.5px;'>Para confirmar que tu correo electrónico es real y finalizar la creación de tu cuenta ciudadana, ingresa el siguiente código de 6 dígitos:</p>
+                        <div style='background:#f4fbf5; border:2px dashed #2e7d32; padding:16px; text-align:center; font-size:28px; font-weight:800; letter-spacing:8px; color:#1b5e20; border-radius:12px; margin:20px 0;'>
+                            {codigo}
+                        </div>
+                        <p style='color:#64748b; font-size:11.5px; text-align:center; margin-bottom:0;'>Si tú no solicitaste este registro en EcoTrack, ignora este correo.</p>
+                    </div>";
+
+                using (var smtp = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new NetworkCredential(remitenteGmail, passApp);
+                    smtp.EnableSsl = true;
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.Send(mail);
+                }
+
+                // 5. Guardar temporalmente en Sesión esperando a que el usuario ingrese los 6 dígitos
+                HttpContext.Session.SetString("TempRegNombre", nombreLimpio);
+                HttpContext.Session.SetString("TempRegCorreo", emailLimpio);
+                HttpContext.Session.SetString("TempRegPass", passLimpio);
+                HttpContext.Session.SetString("TempRegCodigo", codigo);
+
+                return Json(new { ok = true, mensaje = $"Enviamos un código de 6 dígitos a {emailLimpio}. Revisa tu bandeja de entrada o SPAM." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { ok = false, mensaje = "No se pudo enviar el correo de verificación. Asegúrate de haber colocado tu correo Gmail remitente en UsuariosController. Detalle: " + ex.Message });
+            }
+        }
+
+        // PASO 2 DEL REGISTRO: Comprueba el código de 6 dígitos y, si es correcto, guarda el usuario en Neon PostgreSQL
+        [HttpPost]
+        public IActionResult ConfirmarCodigoYRegistrar(string codigo)
+        {
+            string codigoIngresado = (codigo ?? "").Trim();
+            string codigoGuardado = HttpContext.Session.GetString("TempRegCodigo");
+            string nombreLimpio = HttpContext.Session.GetString("TempRegNombre");
+            string emailLimpio = HttpContext.Session.GetString("TempRegCorreo");
+            string passLimpio = HttpContext.Session.GetString("TempRegPass");
+
+            if (string.IsNullOrEmpty(codigoGuardado) || string.IsNullOrEmpty(emailLimpio))
+            {
+                return Json(new { ok = false, mensaje = "La sesión de verificación expiró. Por favor vuelve a solicitar el código." });
+            }
+
+            if (codigoIngresado != codigoGuardado)
+            {
+                return Json(new { ok = false, mensaje = "❌ El código de 6 dígitos es incorrecto. Verifica e intenta de nuevo." });
+            }
+
+            // Dividir inteligentemente el Nombre Completo para cumplir con las 3 columnas de tu BD
             string nombreBD = nombreLimpio;
-            string apellidoPaternoBD = "Ciudadano"; // Valor por defecto si solo ingresa una palabra
+            string apellidoPaternoBD = "Ciudadano";
             string apellidoMaternoBD = "";
 
             var partes = nombreLimpio.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             if (partes.Length == 2)
             {
-                // Ejemplo: "Octavio Pérez" -> Nombre: Octavio, Apellido Paterno: Pérez
                 nombreBD = partes[0];
                 apellidoPaternoBD = partes[1];
             }
             else if (partes.Length == 3)
             {
-                // Ejemplo: "Octavio Pérez Gómez" -> Nombre: Octavio, Apellido P: Pérez, Apellido M: Gómez
                 nombreBD = partes[0];
                 apellidoPaternoBD = partes[1];
                 apellidoMaternoBD = partes[2];
             }
             else if (partes.Length >= 4)
             {
-                // Ejemplo: "Julio Manuel Santos Hernandez" -> Nombre: Julio Manuel, Apellido P: Santos, Apellido M: Hernandez
                 nombreBD = $"{partes[0]} {partes[1]}";
                 apellidoPaternoBD = partes[2];
                 apellidoMaternoBD = partes[3];
@@ -225,22 +316,10 @@ namespace Integradora.Controllers
                 {
                     conn.Open();
 
-                    using (var checkCmd = new NpgsqlCommand("SELECT COUNT(*) FROM usuarios WHERE LOWER(TRIM(correo)) = @correo;", conn))
-                    {
-                        checkCmd.Parameters.AddWithValue("@correo", emailLimpio);
-                        int count = Convert.ToInt32(checkCmd.ExecuteScalar());
-                        if (count > 0)
-                        {
-                            ViewBag.Error = "El correo electrónico ya se encuentra registrado.";
-                            return View();
-                        }
-                    }
-
-                    // Inserción mapeando las 3 columnas por separado a la base de datos
                     const string sqlInsert = @"
-                INSERT INTO usuarios (nombre, apellido_paterno, apellido_materno, correo, password_hash, rol, puntos_totales, fecha_registro)
-                VALUES (@nom, @app, @apm, @correo, @pwd, 'Ciudadano', 0, NOW())
-                RETURNING id_usuario;";
+                        INSERT INTO usuarios (nombre, apellido_paterno, apellido_materno, correo, password_hash, rol, puntos_totales, fecha_registro)
+                        VALUES (@nom, @app, @apm, @correo, @pwd, 'Ciudadano', 0, NOW())
+                        RETURNING id_usuario;";
 
                     int newId = 0;
                     using (var cmd = new NpgsqlCommand(sqlInsert, conn))
@@ -253,6 +332,13 @@ namespace Integradora.Controllers
                         newId = Convert.ToInt32(cmd.ExecuteScalar());
                     }
 
+                    // Limpiar datos temporales de registro
+                    HttpContext.Session.Remove("TempRegCodigo");
+                    HttpContext.Session.Remove("TempRegNombre");
+                    HttpContext.Session.Remove("TempRegCorreo");
+                    HttpContext.Session.Remove("TempRegPass");
+
+                    // Iniciar sesión automáticamente para el nuevo ciudadano verificado
                     string iniciales = "U";
                     if (partes.Length > 1)
                         iniciales = $"{char.ToUpper(partes[0][0])}{char.ToUpper(partes[partes.Length - 1][0])}";
@@ -264,13 +350,12 @@ namespace Integradora.Controllers
                     HttpContext.Session.SetString("UsuarioIniciales", iniciales);
                     HttpContext.Session.SetString("UsuarioRol", "Ciudadano");
 
-                    return RedirectToAction("Index", "Reportes");
+                    return Json(new { ok = true, redirectUrl = "/Reportes/Index" });
                 }
             }
             catch (Exception ex)
             {
-                ViewBag.Error = "Error al registrar: " + ex.Message;
-                return View();
+                return Json(new { ok = false, mensaje = "Error al guardar en base de datos: " + ex.Message });
             }
         }
 

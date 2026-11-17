@@ -1,6 +1,9 @@
 ﻿@{
     Layout = null;
-}<!DOCTYPE html><html lang="es"><head>
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registro Ciudadano - ECOTRACK</title>
@@ -62,7 +65,6 @@
             box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.12);
         }
         
-        /* Contenedor del ojo para contraseña */
         .password-wrapper { position: relative; display: flex; align-items: center; }
         .password-wrapper input { padding-right: 42px; }
         .toggle-password {
@@ -73,7 +75,6 @@
         .toggle-password:hover { color: #1b5e20; }
         .toggle-password svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-        /* Lista visual de requisitos de contraseña */
         .pwd-rules { list-style: none; margin-top: 9px; font-size: 11.5px; color: #52796f; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
         .pwd-rules li { display: flex; align-items: center; gap: 5px; transition: color 0.2s; }
         .pwd-rules li.ok { color: #2e7d32; font-weight: 700; }
@@ -117,7 +118,46 @@
         .bottom-link { font-size: 13px; color: #64748b; margin-top: 22px; }
         .bottom-link a { color: #1b5e20; font-weight: 700; text-decoration: none; }
         .bottom-link a:hover { text-decoration: underline; }
-    </style></head><body>
+
+        /* Estilos del Modal de Verificación de 6 Dígitos */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 45, 24, 0.65);
+            backdrop-filter: blur(3px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-box {
+            background: #ffffff;
+            max-width: 400px;
+            width: 100%;
+            border-radius: 22px;
+            padding: 30px 26px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            border: 1px solid #c8e6c9;
+        }
+        .code-input {
+            width: 100%;
+            padding: 14px;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 10px;
+            text-align: center;
+            border: 2px solid #2e7d32;
+            border-radius: 14px;
+            background: #f4fbf5;
+            color: #1b5e20;
+            outline: none;
+            margin: 16px 0;
+        }
+    </style>
+</head>
+<body>
     <div class="card">
         <div class="logo-title">ECOTRACK</div>
         <div class="subtitle">Crear Nueva Cuenta Ciudadana</div>
@@ -128,14 +168,14 @@
         }
         <div id="alertaCliente" class="alert-error" style="display:none;"></div>
 
-        <form id="formRegistro" method="post" action="/Usuarios/Registro" onsubmit="return validarRegistro(event)">
+        <form id="formRegistro" onsubmit="return enviarCodigoAlCorreo(event)">
             <div class="form-group">
                 <label>Nombre Completo</label>
                 <input type="text" id="regNombre" name="nombre" required minlength="3" maxlength="100" placeholder="Ej: Octavio Pérez" />
             </div>
             <div class="form-group">
                 <label>Correo Electrónico</label>
-                <input type="email" id="regCorreo" name="correo" required maxlength="120" placeholder="tu.correo@ejemplo.com" />
+                <input type="email" id="regCorreo" name="correo" required maxlength="120" placeholder="tu.correo@gmail.com" />
             </div>
             <div class="form-group">
                 <label>Contraseña</label>
@@ -158,6 +198,31 @@
 
         <div class="bottom-link">
             ¿Ya tienes cuenta? <a href="/Usuarios/Index">Inicia Sesión aquí</a>
+        </div>
+    </div>
+
+    <!-- Modal Flotante para Verificar el Código de 6 dígitos enviado al Correo -->
+    <div id="modalVerificacion" class="modal-overlay">
+        <div class="modal-box">
+            <div style="font-size: 36px; margin-bottom: 6px;">📩</div>
+            <h3 style="color: #1b5e20; font-size: 20px; font-weight: 800; margin-bottom: 6px;">Verifica tu Correo</h3>
+            <p id="txtMensajeModal" style="font-size: 13px; color: #4b6352; line-height: 1.4;">
+                Ingresa el código de 6 dígitos que enviamos a tu correo electrónico:
+            </p>
+
+            <div id="alertaModal" class="alert-error" style="display:none; margin-top:12px; margin-bottom:0;"></div>
+
+            <input type="text" id="txtCodigo6" class="code-input" maxlength="6" placeholder="000000" 
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+
+            <button type="button" id="btnConfirmarCodigo" class="btn-submit" onclick="confirmarCodigo6Digitos()" style="margin-top:0;">
+                Verificar y Activar Cuenta
+            </button>
+
+            <button type="button" onclick="cerrarModalCodigo()" 
+                    style="background:none; border:none; color:#64748b; font-size:12.5px; font-weight:600; margin-top:14px; cursor:pointer; text-decoration:underline;">
+                Corregir correo electrónico
+            </button>
         </div>
     </div>
 
@@ -191,7 +256,9 @@
             }
         }
 
-        function validarRegistro(e) {
+        function enviarCodigoAlCorreo(e) {
+            e.preventDefault();
+
             const nombre = document.getElementById('regNombre').value.trim();
             const correo = document.getElementById('regCorreo').value.trim();
             const pass = document.getElementById('regPass').value;
@@ -203,7 +270,6 @@
 
             const regexNombre = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,100}$/;
             if (!regexNombre.test(nombre)) {
-                e.preventDefault();
                 alerta.innerText = "⚠️ Ingresa un nombre válido (mínimo 3 letras, sin números ni símbolos).";
                 alerta.style.display = "block";
                 return false;
@@ -211,14 +277,12 @@
 
             const regexCorreo = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
             if (!regexCorreo.test(correo)) {
-                e.preventDefault();
                 alerta.innerText = "⚠️ Ingresa un correo electrónico válido.";
                 alerta.style.display = "block";
                 return false;
             }
 
             if (pass.length < 8 || !/[A-Z]/.test(pass) || !/[a-z]/.test(pass) || !/[0-9]/.test(pass)) {
-                e.preventDefault();
                 alerta.innerText = "⚠️ La contraseña debe cumplir con los 4 requisitos (mínimo 8 caracteres, mayúscula, minúscula y número).";
                 alerta.style.display = "block";
                 return false;
@@ -226,7 +290,87 @@
 
             alerta.style.display = "none";
             btn.disabled = true;
-            btn.innerText = "Creando cuenta...";
-            return true;
+            btn.innerText = "Enviando código a tu correo...";
+
+            var formData = new FormData();
+            formData.append("nombre", nombre);
+            formData.append("correo", correo);
+            formData.append("contrasena", pass);
+
+            fetch('/Usuarios/EnviarCodigoVerificacion', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerText = "Registrarme";
+
+                if (data.ok) {
+                    document.getElementById('txtMensajeModal').innerText = data.mensaje;
+                    document.getElementById('txtCodigo6').value = "";
+                    document.getElementById('alertaModal').style.display = "none";
+                    document.getElementById('modalVerificacion').style.display = "flex";
+                    document.getElementById('txtCodigo6').focus();
+                } else {
+                    alerta.innerText = "⚠️ " + data.mensaje;
+                    alerta.style.display = "block";
+                }
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.innerText = "Registrarme";
+                alerta.innerText = "⚠️ Error de red al intentar enviar el código.";
+                alerta.style.display = "block";
+            });
+
+            return false;
         }
-    </script></body></html>
+
+        function confirmarCodigo6Digitos() {
+            const codigo = document.getElementById('txtCodigo6').value.trim();
+            const alertaModal = document.getElementById('alertaModal');
+            const btnConfirmar = document.getElementById('btnConfirmarCodigo');
+
+            if (codigo.length !== 6) {
+                alertaModal.innerText = "⚠️ Ingresa los 6 dígitos completos.";
+                alertaModal.style.display = "block";
+                return;
+            }
+
+            alertaModal.style.display = "none";
+            btnConfirmar.disabled = true;
+            btnConfirmar.innerText = "Verificando...";
+
+            var formData = new FormData();
+            formData.append("codigo", codigo);
+
+            fetch('/Usuarios/ConfirmarCodigoYRegistrar', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.ok) {
+                    window.location.href = data.redirectUrl || '/Reportes/Index';
+                } else {
+                    btnConfirmar.disabled = false;
+                    btnConfirmar.innerText = "Verificar y Activar Cuenta";
+                    alertaModal.innerText = data.mensaje;
+                    alertaModal.style.display = "block";
+                }
+            })
+            .catch(() => {
+                btnConfirmar.disabled = false;
+                btnConfirmar.innerText = "Verificar y Activar Cuenta";
+                alertaModal.innerText = "⚠️ Error de conexión al verificar el código.";
+                alertaModal.style.display = "block";
+            });
+        }
+
+        function cerrarModalCodigo() {
+            document.getElementById('modalVerificacion').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

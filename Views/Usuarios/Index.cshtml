@@ -1,23 +1,21 @@
 ﻿@{
-    ViewData["Title"] = "Iniciar Sesión - ECOTRACK";
-    Layout = null; 
+    Layout = null;
 }
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>ECOTRACK</title>
+    <!-- Logotipo en la pestaña del navegador -->
+    <link rel="icon" type="image/png" href="~/img/logo.png" asp-append-version="true" />
+    <link rel="shortcut icon" type="image/png" href="~/img/logo.png" asp-append-version="true" />
 
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
-            margin: 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -26,59 +24,70 @@
         }
 
         .login-card {
-            width: 100%;
-            max-width: 430px;
             background: #ffffff;
+            width: 100%;
+            max-width: 420px;
             border-radius: 24px;
-            box-shadow: 0 20px 45px rgba(27, 94, 32, 0.12);
+            padding: 36px 34px 32px;
+            box-shadow: 0 20px 45px rgba(20, 61, 31, 0.12);
+            border: 1px solid rgba(46, 125, 50, 0.14);
+            text-align: center;
+            position: relative;
             overflow: hidden;
-            border: 1px solid rgba(46, 125, 50, 0.12);
         }
 
-        .login-header {
-            background: linear-gradient(180deg, #f4f9d2 0%, #ffffff 100%);
-            padding: 32px 30px 18px 30px;
-            text-align: center;
-            border-bottom: 1px solid #f1f5f9;
+        .login-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #22c55e, #1b5e20);
         }
 
         .logo-wrapper {
-            display: inline-block;
-            padding: 8px;
-            background: #f3f9c6;
-            border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.12);
-            border: 2px solid #dcedc8;
-            margin-bottom: 14px;
+            width: 115px;
+            height: 115px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, #f0fdf4 0%, #ffffff 75%);
+            border-radius: 50%;
         }
 
         .logo-wrapper img {
-            width: 135px;
-            height: auto;
-            border-radius: 14px;
-            display: block;
+            width: 105px;
+            height: 105px;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+            filter: drop-shadow(0 4px 8px rgba(27, 94, 32, 0.10));
         }
 
-        .brand-subtitle {
+        .subtitle {
+            font-size: 13.5px;
             color: #4b6352;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin: 0;
-            letter-spacing: 0.2px;
-        }
-
-        .login-body {
-            padding: 26px 32px 34px 32px;
-        }
-
-        .form-label {
             font-weight: 600;
-            font-size: 0.85rem;
-            color: #1b4332;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #edf4ee;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #143319;
             margin-bottom: 6px;
         }
 
-        .input-group-custom {
+        .input-box {
             position: relative;
             display: flex;
             align-items: center;
@@ -87,24 +96,25 @@
         .input-icon {
             position: absolute;
             left: 14px;
-            color: #52796f;
-            font-size: 1.05rem;
-            z-index: 4;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            pointer-events: none;
         }
 
-        .form-control-eco {
+        .input-box input {
             width: 100%;
-            padding: 12px 42px 12px 42px;
-            border-radius: 12px;
+            padding: 12px 40px 12px 40px;
             border: 1.5px solid #d8e2dc;
-            font-size: 0.95rem;
+            border-radius: 12px;
+            font-size: 13.5px;
             color: #1e293b;
             background-color: #f8faf9;
+            outline: none;
             transition: all 0.2s ease;
         }
 
-        .form-control-eco:focus {
-            outline: none;
+        .input-box input:focus {
             background-color: #ffffff;
             border-color: #2e7d32;
             box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.12);
@@ -112,120 +122,114 @@
 
         .toggle-password {
             position: absolute;
-            right: 14px;
+            right: 12px;
             background: none;
             border: none;
-            color: #52796f;
             cursor: pointer;
-            padding: 0;
-            font-size: 1.1rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            padding: 4px;
         }
 
-        .toggle-password:hover {
-            color: #1b5e20;
-        }
+        .toggle-password:hover { color: #1b5e20; }
 
-        .btn-eco {
+        .btn-submit {
             width: 100%;
             padding: 13px;
-            border-radius: 12px;
-            border: none;
             background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
             color: #ffffff;
-            font-weight: 600;
-            font-size: 1rem;
-            letter-spacing: 0.3px;
-            box-shadow: 0 8px 18px rgba(46, 125, 50, 0.25);
+            border: none;
+            border-radius: 12px;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 6px;
+            box-shadow: 0 8px 18px rgba(27, 94, 32, 0.24);
             transition: transform 0.15s ease, box-shadow 0.15s ease;
-            margin-top: 8px;
         }
 
-        .btn-eco:hover {
+        .btn-submit:hover {
             transform: translateY(-1px);
-            box-shadow: 0 12px 22px rgba(46, 125, 50, 0.32);
-            background: linear-gradient(135deg, #338a37 0%, #1f6b25 100%);
+            box-shadow: 0 12px 22px rgba(27, 94, 32, 0.32);
         }
 
-        .register-link {
-            text-align: center;
-            margin-top: 22px;
-            font-size: 0.88rem;
+        .alert-error {
+            background: #fde8e8;
+            color: #9b1c1c;
+            border: 1px solid #f8b4b4;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 12.5px;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .bottom-link {
+            font-size: 13px;
             color: #64748b;
+            margin-top: 22px;
         }
 
-        .register-link a {
+        .bottom-link a {
             color: #1b5e20;
             font-weight: 700;
             text-decoration: none;
         }
 
-        .register-link a:hover {
-            text-decoration: underline;
-        }
+        .bottom-link a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <div class="login-card">
-        <!-- Cabecera integrada con el logo -->
-        <div class="login-header">
-            <div class="logo-wrapper">
-                <img src="~/img/logo-ecotrack.jpeg" alt="Logo EcoTrack" />
-            </div>
-            <p class="brand-subtitle">Plataforma Comunitaria de Monitoreo Ambiental</p>
+        <div class="logo-wrapper">
+            <img src="/img/logo.png" alt="Logo EcoTrack" />
         </div>
 
-        <!-- Cuerpo del formulario -->
-        <div class="login-body">
-            @if (ViewBag.Error != null)
-            {
-                <div class="alert alert-danger py-2 px-3 rounded-3 small mb-3">
-                    <i class="bi bi-exclamation-circle me-1"></i> @ViewBag.Error
+        <div class="subtitle">Plataforma Comunitaria de Monitoreo Ambiental</div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert-error">⚠️ @ViewBag.Error</div>
+        }
+
+        <form method="post" action="/Usuarios/Login">
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                <div class="input-box">
+                    <span class="input-icon">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                    </span>
+                    <input type="email" name="correo" required placeholder="tu.correo@ejemplo.com" />
                 </div>
-            }
-
-            <form method="post" asp-action="Login">
-                <div class="mb-3">
-                    <label class="form-label">Correo Electrónico</label>
-                    <div class="input-group-custom">
-                        <i class="bi bi-envelope input-icon"></i>
-                        <input type="email" name="Correo" class="form-control-eco" placeholder="tu.correo@ejemplo.com" required />
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label">Contraseña</label>
-                    <div class="input-group-custom">
-                        <i class="bi bi-lock input-icon"></i>
-                        <input type="password" id="passwordInput" name="Contrasena" class="form-control-eco" placeholder="Mínimo 8 caracteres" required />
-                        <button type="button" class="toggle-password" onclick="togglePass()" title="Mostrar/Ocultar contraseña">
-                            <i class="bi bi-eye" id="eyeIcon"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-eco">
-                    Iniciar Sesión <i class="bi bi-arrow-right-short ms-1"></i>
-                </button>
-            </form>
-
-            <div class="register-link">
-                ¿Aún no tienes una cuenta? <a asp-action="Registro">Regístrate aquí</a>
             </div>
+
+            <div class="form-group">
+                <label>Contraseña</label>
+                <div class="input-box">
+                    <span class="input-icon">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </span>
+                    <input type="password" id="loginPass" name="contrasena" required minlength="8" placeholder="Mínimo 8 caracteres" />
+                    <button type="button" class="toggle-password" onclick="verPassword()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Iniciar Sesión &rarr;</button>
+        </form>
+
+        <div class="bottom-link">
+            ¿Aún no tienes una cuenta? <a href="/Usuarios/Registro">Regístrate aquí</a>
         </div>
     </div>
 
     <script>
-        function togglePass() {
-            const input = document.getElementById('passwordInput');
-            const icon = document.getElementById('eyeIcon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.replace('bi-eye', 'bi-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.replace('bi-eye-slash', 'bi-eye');
-            }
+        function verPassword() {
+            const input = document.getElementById('loginPass');
+            input.type = input.type === 'password' ? 'text' : 'password';
         }
     </script>
 </body>
