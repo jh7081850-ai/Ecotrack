@@ -14,6 +14,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Monitoreo Territorial - ECOTRACK</title>
+    <link rel="icon" type="image/png" href="~/img/logo.png" asp-append-version="true" />
+    <link rel="shortcut icon" type="image/png" href="~/img/logo.png" asp-append-version="true" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
             * {
@@ -369,6 +371,7 @@
             }
     </style>
 </head>
+
 <body>
 
     <div id="notificacionBanner">
@@ -432,12 +435,11 @@
         <div id="map"></div>
     </div>
 
-    <!-- MODAL NUEVO REPORTE -->
     <div id="modalReporte" class="modal-overlay">
         <div class="modal-card">
             <button class="modal-close" onclick="cerrarModal('modalReporte')">&times;</button>
             <h3 style="color:#1b5e20; margin-bottom:4px;">Registrar Incidencia Territorial</h3>
-            <p style="font-size:12px; color:#5a8262; margin-bottom:14px;">Al guardar, la incidencia se registrará en la base de datos y se publicará el reto con 100 pts automáticamente.</p>
+            <p style="font-size:12px; color:#5a8262; margin-bottom:14px;">Al guardar, la incidencia se registrará en la base de datos y pasará a validación para publicarse con 100 pts.</p>
 
             <form id="formNuevoReporte" onsubmit="enviarReporteAjax(event)">
                 <div class="form-group">
@@ -491,7 +493,6 @@
         </div>
     </div>
 
-    <!-- MODAL EVIDENCIA RETO (IA) -->
     <div id="modalEvidenciaReto" class="modal-overlay">
         <div class="modal-card">
             <button class="modal-close" onclick="cerrarModal('modalEvidenciaReto')">&times;</button>
@@ -511,6 +512,44 @@
         </div>
     </div>
 
+    <!-- MODAL SELECTOR DE REDES SOCIALES -->
+    <div id="modalCompartirRedes" class="modal-overlay" style="z-index: 4500;">
+        <div class="modal-card" style="max-width: 390px; text-align: center;">
+            <button class="modal-close" onclick="cerrarModalRedes()">&times;</button>
+            <h3 style="color:#1b5e20; font-size:18px; font-weight:800; margin-bottom:6px;">🌱 Compartir en Redes Sociales</h3>
+            <p id="txtRetoCompartir" style="font-size:13px; color:#4b6352; margin-bottom:16px; font-weight:600;"></p>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                <a id="btnShareWA" href="#" target="_blank" onclick="cerrarModalRedes()"
+                   style="display:flex; align-items:center; justify-content:center; gap:6px; padding:11px; border-radius:10px; background:#25D366; color:#fff; text-decoration:none; font-weight:700; font-size:13px;">
+                    💬 WhatsApp
+                </a>
+                <a id="btnShareFB" href="#" target="_blank" onclick="cerrarModalRedes()"
+                   style="display:flex; align-items:center; justify-content:center; gap:6px; padding:11px; border-radius:10px; background:#1877F2; color:#fff; text-decoration:none; font-weight:700; font-size:13px;">
+                    📘 Facebook
+                </a>
+                <a id="btnShareTW" href="#" target="_blank" onclick="cerrarModalRedes()"
+                   style="display:flex; align-items:center; justify-content:center; gap:6px; padding:11px; border-radius:10px; background:#0f1419; color:#fff; text-decoration:none; font-weight:700; font-size:13px;">
+                    ✖️ X (Twitter)
+                </a>
+                <a id="btnShareTG" href="#" target="_blank" onclick="cerrarModalRedes()"
+                   style="display:flex; align-items:center; justify-content:center; gap:6px; padding:11px; border-radius:10px; background:#0088cc; color:#fff; text-decoration:none; font-weight:700; font-size:13px;">
+                    ✈️ Telegram
+                </a>
+            </div>
+
+            <button type="button" onclick="copiarParaInstagram()"
+                    style="width:100%; padding:11px; border-radius:10px; background:linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color:#fff; border:none; font-weight:700; font-size:13px; cursor:pointer; margin-bottom:8px;">
+                📸 Instagram / TikTok (Copiar invitación)
+            </button>
+
+            <button type="button" onclick="compartirDispositivoNativo()"
+                    style="width:100%; padding:10px; border-radius:10px; background:#e8f5e9; color:#1b5e20; border:1px solid #a5d6a7; font-weight:700; font-size:12.5px; cursor:pointer;">
+                📲 Otras aplicaciones del dispositivo...
+            </button>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
             const tecamacCoord = [19.7150, -98.9680];
@@ -526,6 +565,7 @@
 
                 const esResuelto = (r.Estatus === 'Resuelto');
                 const estatusColor = esResuelto ? '#2e7d32' : '#e65100';
+                const tituloSeguro = (r.Titulo || 'Reto Ecológico').replace(/'/g, "\\'");
 
                 const botonHtml = esResuelto
                     ? `<div style="background:#c8e6c9; color:#1b5e20; text-align:center; padding:6px; border-radius:4px; font-size:11.5px; font-weight:800; margin-top:6px;">✅ Reto Resuelto y Verificado</div>`
@@ -545,7 +585,7 @@
                             ${botonHtml}
                         </div>
                         <div style="margin-top:6px;">
-                            <button onclick="compartirPunto('${r.Titulo}', ${r.Latitud}, ${r.Longitud})"
+                            <button type="button" onclick="compartirPunto('${tituloSeguro}', ${r.Latitud}, ${r.Longitud})"
                                     style="background:#2e7d32; color:#fff; border:none; padding:5px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; width:100%;">
                                 Compartir en Redes
                             </button>
@@ -588,19 +628,20 @@
                     btn.disabled = false;
                     btn.innerText = "Guardar Incidencia y Publicar Reto";
 
-                    if (data && data.success && data.reporte) {
+                    if (data && data.success) {
                         cerrarModal('modalReporte');
-
-                        const nuevo = data.reporte;
-                        const nuevoMarker = L.marker([nuevo.Latitud, nuevo.Longitud]).addTo(map);
-                        nuevoMarker.bindPopup(generarContenidoPopup(nuevo)).openPopup();
-
-                        // Guardamos el nuevo marcador en el diccionario global por su ID
-                        window.marcadoresMapa[nuevo.Id] = nuevoMarker;
-
-                        map.setView([nuevo.Latitud, nuevo.Longitud], 15);
                         document.getElementById('formNuevoReporte').reset();
-                        mostrarNotificacionWeb(true, "¡Incidencia guardada y reto publicado en el mapa!");
+
+                        if (data.requiereValidacion) {
+                            mostrarNotificacionWeb(true, data.message || "✅ Tu reporte y reto ecológico fueron registrados y están en espera de validación por el Administrador.");
+                        } else if (data.reporte) {
+                            const nuevo = data.reporte;
+                            const nuevoMarker = L.marker([nuevo.Latitud, nuevo.Longitud]).addTo(map);
+                            nuevoMarker.bindPopup(generarContenidoPopup(nuevo)).openPopup();
+                            window.marcadoresMapa[nuevo.Id] = nuevoMarker;
+                            map.setView([nuevo.Latitud, nuevo.Longitud], 15);
+                            mostrarNotificacionWeb(true, "¡Incidencia guardada y reto publicado en el mapa!");
+                        }
                     } else {
                         cerrarModal('modalReporte');
                         mostrarNotificacionWeb(false, data.message || "Error al guardar la incidencia.");
@@ -741,6 +782,52 @@
                 }
             }
 
+            // --- SELECTOR DE MÚLTIPLES REDES SOCIALES ---
+            let textoGlobalCompartir = "";
+            let urlGlobalMapa = "";
+
+            function compartirPunto(tit, lat, lng) {
+                const titulo = tit || 'Reto Ecológico';
+                urlGlobalMapa = (lat && lng) ? `https://maps.google.com/?q=${lat},${lng}` : window.location.origin;
+                textoGlobalCompartir = `🌱 ¡Únete al reto "${titulo}" en ECOTRACK Tecámac y gana +100 pts!\n📍 Ver en mapa: ${urlGlobalMapa}\n🔗 Plataforma: ${window.location.origin}`;
+
+                document.getElementById('txtRetoCompartir').innerText = titulo;
+
+                const textoEncoded = encodeURIComponent(textoGlobalCompartir);
+                const urlEncoded = encodeURIComponent(urlGlobalMapa);
+
+                document.getElementById('btnShareWA').href = `https://api.whatsapp.com/send?text=${textoEncoded}`;
+                document.getElementById('btnShareFB').href = `https://www.facebook.com/sharer/sharer.php?u=${urlEncoded}&quote=${textoEncoded}`;
+                document.getElementById('btnShareTW').href = `https://twitter.com/intent/tweet?text=${textoEncoded}`;
+                document.getElementById('btnShareTG').href = `https://t.me/share/url?url=${urlEncoded}&text=${textoEncoded}`;
+
+                document.getElementById('modalCompartirRedes').style.display = 'flex';
+            }
+
+            function cerrarModalRedes() {
+                document.getElementById('modalCompartirRedes').style.display = 'none';
+            }
+
+            function copiarParaInstagram() {
+                navigator.clipboard.writeText(textoGlobalCompartir).then(() => {
+                    cerrarModalRedes();
+                    mostrarNotificacionWeb(true, "¡Mensaje y ubicación copiados al portapapeles! Pégalo en Instagram, TikTok o Messenger.");
+                    window.open('https://www.instagram.com/', '_blank');
+                });
+            }
+
+            function compartirDispositivoNativo() {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'EcoTrack Tecámac',
+                        text: textoGlobalCompartir,
+                        url: urlGlobalMapa
+                    }).catch(() => {});
+                } else {
+                    copiarParaInstagram();
+                }
+            }
+
             function compartirWhatsApp() {
                 const tit = document.getElementById('repTitulo').value || 'Incidencia';
                 const lat = document.getElementById('repLat').value;
@@ -753,32 +840,15 @@
                 const tit = document.getElementById('repTitulo').value || 'Incidencia';
                 const lat = document.getElementById('repLat').value;
                 const lng = document.getElementById('repLng').value;
-                const texto = `🚨 ECOTRACK Tecámac: ${tit} (Ubicación: https://maps.google.com/?q=${lat},${lng})`;
-
-                navigator.clipboard.writeText(texto).then(() => {
-                    alert('¡Enlace y reporte copiado al portapapeles!\nPégalo en tu Historia o Publicación de Instagram.');
-                    window.open('https://www.instagram.com/', '_blank');
-                });
+                textoGlobalCompartir = `🚨 ECOTRACK Tecámac: ${tit} (Ubicación: https://maps.google.com/?q=${lat},${lng})`;
+                copiarParaInstagram();
             }
 
             function compartirNativo() {
-                const tit = document.getElementById('repTitulo').value || 'Incidencia';
+                const tit = document.getElementById('repTitulo').value || 'Incidencia Ambiental';
                 const lat = document.getElementById('repLat').value;
                 const lng = document.getElementById('repLng').value;
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'EcoTrack Tecámac',
-                        text: `Reporte de incidencia: ${tit}`,
-                        url: `https://maps.google.com/?q=${lat},${lng}`
-                    });
-                } else {
-                    compartirInstagram();
-                }
-            }
-
-            function compartirPunto(tit, lat, lng) {
-                const msg = encodeURIComponent(`🚨 *ECOTRACK Tecámac*: ${tit}\nVer en mapa: https://maps.google.com/?q=${lat},${lng}`);
-                window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+                compartirPunto(tit, lat, lng);
             }
     </script>
 </body>
