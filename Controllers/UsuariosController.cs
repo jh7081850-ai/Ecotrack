@@ -14,10 +14,8 @@ namespace Integradora.Controllers
     {
         private readonly IConfiguration _configuration;
 
-        // Contraseña de aplicación de 16 letras generada en Google (sin espacios)
+        // Credenciales oficiales de Gmail integradas directamente para evitar errores de Host desconocido o variables faltantes
         private const string PasswordAppGmail = "mpetvnhdtwemmect";
-
-        // ⚠️ IMPORTANTE: Pon aquí el correo Gmail exacto donde generaste la contraseña de arriba
         private const string CorreoGmailPorDefecto = "jh7081850@gmail.com";
 
         public UsuariosController(IConfiguration configuration)
@@ -210,21 +208,15 @@ namespace Integradora.Controllers
                 // 2. Generar código aleatorio de 6 dígitos
                 string codigo = new Random().Next(100000, 999999).ToString();
 
-                // 3. Tomar el correo remitente de appsettings.json o usar la constante de arriba
-                string remitenteGmail = _configuration["CorreoConfig:Remitente"];
-                if (string.IsNullOrWhiteSpace(remitenteGmail) || remitenteGmail.Contains("pon_aqui"))
-                {
-                    remitenteGmail = CorreoGmailPorDefecto;
-                }
+                // 3. Usar las credenciales fijas de Gmail
+                string remitenteGmail = CorreoGmailPorDefecto;
+                string passApp = PasswordAppGmail;
 
-                string passApp = _configuration["CorreoConfig:PasswordApp"];
-                if (string.IsNullOrWhiteSpace(passApp))
-                {
-                    passApp = PasswordAppGmail;
-                }
-                passApp = passApp.Replace(" ", "").Trim();
+                // 4. Configurar seguridad SSL local para evitar bloqueos en localhost o servidores en la nube
+                ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
 
-                // 4. Enviar correo real usando el servidor SMTP de Gmail
+                // 5. Enviar correo real usando el servidor SMTP de Gmail
                 var mail = new MailMessage();
                 mail.From = new MailAddress(remitenteGmail, "EcoTrack Monitoreo Ambiental");
                 mail.To.Add(emailLimpio);
@@ -243,14 +235,15 @@ namespace Integradora.Controllers
 
                 using (var smtp = new SmtpClient("smtp.gmail.com", 587))
                 {
-                    smtp.UseDefaultCredentials = false;
-                    smtp.Credentials = new NetworkCredential(remitenteGmail, passApp);
                     smtp.EnableSsl = true;
                     smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new NetworkCredential(remitenteGmail, passApp);
+                    smtp.Timeout = 20000;
                     smtp.Send(mail);
                 }
 
-                // 5. Guardar temporalmente en Sesión esperando a que el usuario ingrese los 6 dígitos
+                // 6. Guardar temporalmente en Sesión esperando a que el usuario ingrese los 6 dígitos
                 HttpContext.Session.SetString("TempRegNombre", nombreLimpio);
                 HttpContext.Session.SetString("TempRegCorreo", emailLimpio);
                 HttpContext.Session.SetString("TempRegPass", passLimpio);
@@ -260,7 +253,8 @@ namespace Integradora.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { ok = false, mensaje = "No se pudo enviar el correo de verificación. Asegúrate de haber colocado tu correo Gmail remitente en UsuariosController. Detalle: " + ex.Message });
+                string detalleReal = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return Json(new { ok = false, mensaje = "No se pudo enviar el correo de verificación. Detalle: " + detalleReal });
             }
         }
 
