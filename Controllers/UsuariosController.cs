@@ -16,7 +16,6 @@ namespace Integradora.Controllers
     {
         private readonly IConfiguration _configuration;
 
-        // Credenciales oficiales de Gmail integradas directamente para evitar errores de Host desconocido o variables faltantes
         private const string PasswordAppGmail = "mpetvnhdtwemmect";
         private const string CorreoGmailPorDefecto = "jh7081850@gmail.com";
 
@@ -46,7 +45,6 @@ namespace Integradora.Controllers
             return tieneMayuscula && tieneMinuscula && tieneNumero;
         }
 
-        // Vista de Login
         [HttpGet]
         public IActionResult Index()
         {
@@ -159,9 +157,7 @@ namespace Integradora.Controllers
             return View();
         }
 
-        private const string UrlPuenteGmail = "https://script.google.com/macros/s/AKfycby2xnS16v6oc5JQvdFUeRTwUtOjCpDr8RcigMRypj03OlL78TNI4kZuFzBzU3-9IAcH/execñ";
-
-     
+        private const string UrlPuenteGmail = "https://script.google.com/macros/s/AKfycby2xnS16v6oc5JQvdFUeRTwUtOjCpDr8RcigMRypj03OlL78TNI4kZuFzBzU3-9IAcH/exec";
 
         [HttpPost]
         public async Task<IActionResult> EnviarCodigoVerificacion(string nombre, string correo, string contrasena)
@@ -266,7 +262,7 @@ namespace Integradora.Controllers
                             enviado = true;
                         }
                     }
-                    catch {  }
+                    catch { }
                 }
 
                 if (enviado)
@@ -276,8 +272,8 @@ namespace Integradora.Controllers
 
                 return Json(new
                 {
-                    ok = true,
-                    mensaje = $"Modo Verificación Activo para {emailLimpio}, revisa tu bandeja de entrada o carpeta de SPAM."
+                    ok = false,
+                    mensaje = "No se pudo enviar el código de verificación al correo electrónico. Intenta nuevamente en unos segundos."
                 });
             }
             catch (Exception ex)
