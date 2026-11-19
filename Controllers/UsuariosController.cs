@@ -277,7 +277,7 @@ namespace Integradora.Controllers
                 return Json(new
                 {
                     ok = true,
-                    mensaje = $"Modo Verificación Activo para {emailLimpio},Revisa tu bandeja de entrada o carpeta de SPAM."
+                    mensaje = $"Modo Verificación Activo para {emailLimpio}, revisa tu bandeja de entrada o carpeta de SPAM."
                 });
             }
             catch (Exception ex)
