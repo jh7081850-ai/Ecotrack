@@ -271,7 +271,7 @@ namespace Integradora.Controllers
 
                 if (enviado)
                 {
-                    return Json(new { ok = true, mensaje = $"Enviamos un código de 6 dígitos a {emailLimpio}. Revisa tu bandeja de entrada o SPAM." });
+                    return Json(new { ok = true, mensaje = $"Enviamos un código de 6 dígitos a {emailLimpio}, revisa tu bandeja de entrada o SPAM." });
                 }
 
                 return Json(new
