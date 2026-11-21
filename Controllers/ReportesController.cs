@@ -41,11 +41,12 @@ namespace Integradora.Controllers
 
             if (string.IsNullOrWhiteSpace(apiKey))
             {
-                return (false, "No se encontró la clave de API de Gemini configurada en el servidor.");
+                return (true, "Validación de IA omitida por falta de clave; reporte enviado a validación del Administrador.");
             }
 
             string base64Image = Convert.ToBase64String(imageBytes);
-            string url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={apiKey}";
+            string url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key={apiKey}";
+
             var payload = new
             {
                 contents = new[]
@@ -69,14 +70,13 @@ namespace Integradora.Controllers
                 },
                 generationConfig = new
                 {
-                    temperature = 0.1,
                     maxOutputTokens = 250,
                     responseMimeType = "application/json"
                 }
             };
 
             string jsonPayload = JsonSerializer.Serialize(payload);
-            const int maxIntentos = 3;
+            const int maxIntentos = 2;
 
             for (int intento = 1; intento <= maxIntentos; intento++)
             {
@@ -84,26 +84,35 @@ namespace Integradora.Controllers
                 {
                     var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-                    using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(25) })
+                    using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(15) })
                     {
                         var response = await client.PostAsync(url, content);
                         string jsonResponse = await response.Content.ReadAsStringAsync();
 
                         if (!response.IsSuccessStatusCode)
                         {
-                            if ((int)response.StatusCode == 503 && intento < maxIntentos)
+                            if (((int)response.StatusCode == 503 || (int)response.StatusCode == 429) && intento < maxIntentos)
                             {
-                                await Task.Delay(2000);
+                                await Task.Delay(1500);
                                 continue;
                             }
 
-                            return (false, $"No se pudo validar la imagen con Gemini 3.8 Flash (HTTP {(int)response.StatusCode}). Detalle: {jsonResponse}");
+                            if ((int)response.StatusCode == 503 || (int)response.StatusCode == 429 || (int)response.StatusCode == 404)
+                            {
+                                return (true, $"Gemini 3.5 Flash-Lite no disponible o saturado (HTTP {(int)response.StatusCode}); reporte enviado a validación del Administrador.");
+                            }
+
+                            return (false, $"No se pudo validar la imagen (HTTP {(int)response.StatusCode}). Intenta con otra fotografía.");
                         }
 
                         using (var doc = JsonDocument.Parse(jsonResponse))
                         {
-                            var textResult = doc.RootElement
-                                .GetProperty("candidates")[0]
+                            if (!doc.RootElement.TryGetProperty("candidates", out var candidates) || candidates.GetArrayLength() == 0)
+                            {
+                                return (true, "IA sin respuesta estructurada; reporte enviado a validación del Administrador.");
+                            }
+
+                            var textResult = candidates[0]
                                 .GetProperty("content")
                                 .GetProperty("parts")[0]
                                 .GetProperty("text")
@@ -111,7 +120,7 @@ namespace Integradora.Controllers
 
                             if (string.IsNullOrWhiteSpace(textResult))
                             {
-                                return (false, "La IA no devolvió una respuesta válida. Intenta con otra fotografía.");
+                                return (true, "Respuesta vacía de la IA; reporte enviado a validación del Administrador.");
                             }
 
                             int inicioJson = textResult.IndexOf('{');
@@ -132,28 +141,27 @@ namespace Integradora.Controllers
                                 }
                             }
 
-                            return (false, "No se pudo interpretar el análisis de la IA. Intenta subir la foto nuevamente.");
+                            return (true, "Análisis registrado; reporte enviado a validación del Administrador.");
                         }
                     }
                 }
-                catch (TaskCanceledException ex)
+                catch (TaskCanceledException)
                 {
                     if (intento < maxIntentos)
                     {
-                        await Task.Delay(2000);
+                        await Task.Delay(1500);
                         continue;
                     }
 
-                    string detalle = ex.InnerException?.Message ?? ex.Message;
-                    return (false, $"Tiempo agotado o conexión cancelada: {detalle}");
+                    return (true, "Tiempo de espera agotado con Gemini 3.5; el reporte se envió a validación del Administrador.");
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    return (false, "Error al conectar con el validador de imágenes: " + ex.Message);
+                    return (true, "Conexión con IA interrumpida; el reporte se envió a validación del Administrador.");
                 }
             }
 
-            return (false, "No se pudo completar la validación de la imagen tras varios intentos.");
+            return (true, "Reporte enviado a validación del Administrador.");
         }
 
         [HttpGet]
