@@ -373,6 +373,172 @@ namespace Integradora.Controllers
             }
         }
 
+        // ==================== RECUPERACIÓN DE CONTRASEÑA ====================
+
+        [HttpPost]
+        public async Task<IActionResult> EnviarCodigoRecuperacion(string correo)
+        {
+            string emailLimpio = (correo ?? "").Trim().ToLower();
+
+            if (!EsCorreoValido(emailLimpio))
+                return Json(new { ok = false, mensaje = "Ingresa un correo electrónico válido." });
+
+            string connectionString = _configuration.GetConnectionString("NeonDb");
+
+            try
+            {
+                string nombreUsuario = "Usuario";
+
+                using (var conn = new NpgsqlConnection(connectionString))
+                {
+                    conn.Open();
+                    using (var checkCmd = new NpgsqlCommand("SELECT nombre FROM usuarios WHERE LOWER(TRIM(correo)) = @correo LIMIT 1;", conn))
+                    {
+                        checkCmd.Parameters.AddWithValue("@correo", emailLimpio);
+                        var result = checkCmd.ExecuteScalar();
+                        if (result == null || result == DBNull.Value)
+                            return Json(new { ok = false, mensaje = "No existe ninguna cuenta registrada con ese correo electrónico." });
+
+                        nombreUsuario = result.ToString();
+                    }
+                }
+
+                string codigo = new Random().Next(100000, 999999).ToString();
+                HttpContext.Session.SetString("RecCorreo", emailLimpio);
+                HttpContext.Session.SetString("RecCodigo", codigo);
+
+                string cuerpoHtml = $@"
+                    <div style='font-family:Segoe UI,Arial,sans-serif; max-width:460px; margin:auto; padding:24px; border:1px solid #d9e7dc; border-radius:16px; background:#ffffff;'>
+                        <h2 style='color:#1b5e20; margin-top:0; text-align:center;'>🌱 ECOTRACK</h2>
+                        <p style='color:#333; font-size:14px;'>Hola <b>{nombreUsuario}</b>,</p>
+                        <p style='color:#4b6352; font-size:13.5px;'>Recibimos una solicitud para restablecer tu contraseña. Ingresa el siguiente código de 6 dígitos en la plataforma:</p>
+                        <div style='background:#f4fbf5; border:2px dashed #2e7d32; padding:16px; text-align:center; font-size:28px; font-weight:800; letter-spacing:8px; color:#1b5e20; border-radius:12px; margin:20px 0;'>
+                            {codigo}
+                        </div>
+                        <p style='color:#64748b; font-size:11.5px; text-align:center; margin-bottom:0;'>Si tú no solicitaste este cambio, ignora este correo y tu contraseña seguirá segura.</p>
+                    </div>";
+
+                bool enviado = false;
+
+                if (!string.IsNullOrWhiteSpace(UrlPuenteGmail) && UrlPuenteGmail.StartsWith("https://script.google.com"))
+                {
+                    try
+                    {
+                        var payload = new
+                        {
+                            destinatario = emailLimpio,
+                            asunto = "Código para Recuperar Contraseña - EcoTrack",
+                            cuerpoHtml = cuerpoHtml
+                        };
+                        var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+                        using (var handler = new HttpClientHandler { AllowAutoRedirect = true })
+                        using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(15) })
+                        {
+                            var response = await client.PostAsync(UrlPuenteGmail, content);
+                            if (response.IsSuccessStatusCode)
+                            {
+                                enviado = true;
+                            }
+                        }
+                    }
+                    catch { }
+                }
+
+                if (!enviado)
+                {
+                    try
+                    {
+                        ServicePointManager.ServerCertificateValidationCallback = (s, c, ch, e) => true;
+                        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
+
+                        var mail = new MailMessage();
+                        mail.From = new MailAddress(CorreoGmailPorDefecto, "EcoTrack Monitoreo Ambiental");
+                        mail.To.Add(emailLimpio);
+                        mail.Subject = "Código para Recuperar Contraseña - EcoTrack";
+                        mail.IsBodyHtml = true;
+                        mail.Body = cuerpoHtml;
+
+                        using (var smtp = new SmtpClient("smtp.gmail.com", 587))
+                        {
+                            smtp.EnableSsl = true;
+                            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                            smtp.UseDefaultCredentials = false;
+                            smtp.Credentials = new NetworkCredential(CorreoGmailPorDefecto, PasswordAppGmail);
+                            smtp.Timeout = 10000;
+                            smtp.Send(mail);
+                            enviado = true;
+                        }
+                    }
+                    catch { }
+                }
+
+                if (enviado)
+                {
+                    return Json(new { ok = true, mensaje = $"Enviamos un código de 6 dígitos a {emailLimpio}. Revisa tu bandeja de entrada o SPAM." });
+                }
+
+                return Json(new { ok = false, mensaje = "No se pudo enviar el correo de recuperación. Intenta nuevamente en unos segundos." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { ok = false, mensaje = "Error al procesar la solicitud: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult RestablecerContrasena(string codigo, string nuevaContrasena)
+        {
+            string codigoIngresado = (codigo ?? "").Trim();
+            string passLimpio = (nuevaContrasena ?? "").Trim();
+            string codigoGuardado = HttpContext.Session.GetString("RecCodigo");
+            string correoGuardado = HttpContext.Session.GetString("RecCorreo");
+
+            if (string.IsNullOrEmpty(codigoGuardado) || string.IsNullOrEmpty(correoGuardado))
+            {
+                return Json(new { ok = false, mensaje = "La sesión de recuperación expiró. Vuelve a solicitar un código." });
+            }
+
+            if (codigoIngresado != codigoGuardado)
+            {
+                return Json(new { ok = false, mensaje = "❌ El código de 6 dígitos es incorrecto. Verifica e intenta de nuevo." });
+            }
+
+            if (!EsContrasenaSegura(passLimpio))
+            {
+                return Json(new { ok = false, mensaje = "La nueva contraseña debe tener mínimo 8 caracteres, e incluir mayúscula, minúscula y número." });
+            }
+
+            string connectionString = _configuration.GetConnectionString("NeonDb");
+
+            try
+            {
+                using (var conn = new NpgsqlConnection(connectionString))
+                {
+                    conn.Open();
+                    using (var cmd = new NpgsqlCommand("UPDATE usuarios SET password_hash = @pwd WHERE LOWER(TRIM(correo)) = @correo;", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@pwd", passLimpio);
+                        cmd.Parameters.AddWithValue("@correo", correoGuardado);
+                        int filas = cmd.ExecuteNonQuery();
+
+                        if (filas == 0)
+                            return Json(new { ok = false, mensaje = "No se encontró el usuario para actualizar la contraseña." });
+                    }
+                }
+
+                HttpContext.Session.Remove("RecCodigo");
+                HttpContext.Session.Remove("RecCorreo");
+
+                return Json(new { ok = true, mensaje = "✅ ¡Contraseña actualizada! Ya puedes iniciar sesión con tu nueva clave." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { ok = false, mensaje = "Error al actualizar la contraseña: " + ex.Message });
+            }
+        }
+
+        // ====================================================================
+
         [HttpGet]
         public IActionResult Lista()
         {

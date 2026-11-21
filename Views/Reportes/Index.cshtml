@@ -19,374 +19,374 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
     <style>
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-                font-family: 'Segoe UI', system-ui, sans-serif;
-            }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
 
-            body {
-                display: flex;
-                height: 100vh;
-                background: #f4fbf5;
-                color: #143319;
-                overflow: hidden;
-            }
+        body {
+            display: flex;
+            height: 100vh;
+            background: #f4fbf5;
+            color: #143319;
+            overflow: hidden;
+        }
 
-            .sidebar {
-                width: 260px;
-                min-width: 260px;
-                background: #fff;
-                border-right: 1px solid #d9e7dc;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                z-index: 1000;
-            }
+        .sidebar {
+            width: 260px;
+            min-width: 260px;
+            background: #fff;
+            border-right: 1px solid #d9e7dc;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 1000;
+        }
 
-            .brand-header {
-                padding: 22px;
-                font-size: 20px;
-                font-weight: 800;
-                color: #1b5e20;
-            }
+        .brand-header {
+            padding: 22px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #1b5e20;
+        }
 
-            .user-card {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                margin: 0 16px 20px;
-                padding: 12px 14px;
-                background: #e8f5e9;
-                border-radius: 12px;
-            }
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 16px 20px;
+            padding: 12px 14px;
+            background: #e8f5e9;
+            border-radius: 12px;
+        }
 
-            .user-avatar {
-                width: 38px;
-                height: 38px;
-                border-radius: 50%;
-                background: #2e7d32;
-                color: #fff;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: 700;
-            }
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #2e7d32;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
 
-            .points-badge {
-                display: inline-block;
-                background: #1b5e20;
-                color: #fff;
-                font-size: 11px;
-                font-weight: 800;
-                padding: 2px 7px;
-                border-radius: 10px;
-                margin-top: 3px;
-            }
+        .points-badge {
+            display: inline-block;
+            background: #1b5e20;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 10px;
+            margin-top: 3px;
+        }
 
-            .menu-heading {
-                font-size: 10.5px;
-                font-weight: 700;
-                color: #76a880;
-                padding: 12px 22px 6px;
-            }
+        .menu-heading {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #76a880;
+            padding: 12px 22px 6px;
+        }
 
-            .menu-link {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                padding: 10px 22px;
-                color: #385e3c;
-                text-decoration: none;
-                font-size: 13.5px;
-                font-weight: 600;
-            }
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 22px;
+            color: #385e3c;
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 600;
+        }
 
-                .menu-link.active {
-                    background: #e8f5e9;
-                    color: #1b5e20;
-                    border-left: 4px solid #2e7d32;
-                    font-weight: 700;
-                }
-
-                .menu-link.admin-btn {
-                    background: #0f2d18;
-                    color: #a3e635;
-                    border-radius: 8px;
-                    margin: 6px 14px;
-                    padding: 10px 14px;
-                    font-weight: 700;
-                }
-
-                    .menu-link.admin-btn:hover {
-                        background: #164e28;
-                    }
-
-            .map-wrapper {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                position: relative;
-            }
-
-            .top-nav {
-                height: 64px;
-                background: #fff;
-                border-bottom: 1px solid #d9e7dc;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 0 24px;
-                z-index: 500;
-            }
-
-            .top-title h2 {
-                font-size: 17px;
-                color: #1b5e20;
-                font-weight: 800;
-            }
-
-            .top-title p {
-                font-size: 12px;
-                color: #5a8262;
-            }
-
-            .top-actions {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-
-            .btn-top {
-                padding: 8px 16px;
-                border-radius: 8px;
-                font-size: 12.5px;
-                font-weight: 700;
-                border: none;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                text-decoration: none;
-            }
-
-            .btn-center {
+            .menu-link.active {
                 background: #e8f5e9;
                 color: #1b5e20;
-                border: 1px solid #c8e6c9;
+                border-left: 4px solid #2e7d32;
+                font-weight: 700;
             }
 
-            .btn-report {
-                background: #2e7d32;
-                color: #fff;
-                box-shadow: 0 2px 6px rgba(46,125,50,0.3);
-            }
-
-                .btn-report:hover {
-                    background: #1b5e20;
-                }
-
-            .btn-admin-panel {
+            .menu-link.admin-btn {
                 background: #0f2d18;
                 color: #a3e635;
-                border: 1px solid #143e20;
+                border-radius: 8px;
+                margin: 6px 14px;
+                padding: 10px 14px;
+                font-weight: 700;
             }
 
-                .btn-admin-panel:hover {
+                .menu-link.admin-btn:hover {
                     background: #164e28;
                 }
 
-            .user-pts-top {
-                background: #f1f8f3;
-                border: 1px solid #c8e6c9;
-                color: #1b5e20;
-                padding: 7px 12px;
-                border-radius: 8px;
-                font-size: 12.5px;
-                font-weight: 800;
-            }
+        .map-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
 
-            .clima-badge {
-                background: #e0f2fe;
-                border: 1px solid #bae6fd;
-                color: #0369a1;
-                padding: 7px 12px;
-                border-radius: 8px;
-                font-size: 12.5px;
-                font-weight: 800;
-                display: flex;
-                align-items: center;
-                gap: 5px;
-            }
+        .top-nav {
+            height: 64px;
+            background: #fff;
+            border-bottom: 1px solid #d9e7dc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 500;
+        }
 
-            #map {
-                flex: 1;
-                width: 100%;
-                height: 100%;
-            }
+        .top-title h2 {
+            font-size: 17px;
+            color: #1b5e20;
+            font-weight: 800;
+        }
 
-            .leaflet-routing-container {
-                display: none !important;
-            }
+        .top-title p {
+            font-size: 12px;
+            color: #5a8262;
+        }
 
-            .challenge-box {
-                background: #e8f5e9;
-                border: 1px solid #a5d6a7;
-                border-radius: 6px;
-                padding: 8px;
-                margin: 8px 0;
-                text-align: left;
-            }
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-            .challenge-pts {
-                color: #1b5e20;
-                font-weight: 800;
-                font-size: 11.5px;
-                display: inline-block;
-                background: #c8e6c9;
-                padding: 2px 6px;
-                border-radius: 4px;
-                margin-top: 3px;
-            }
+        .btn-top {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
 
-            .modal-overlay {
-                display: none;
-                position: fixed;
-                inset: 0;
-                background: rgba(0,0,0,0.5);
-                z-index: 2000;
-                justify-content: center;
-                align-items: center;
-                padding: 15px;
-            }
+        .btn-center {
+            background: #e8f5e9;
+            color: #1b5e20;
+            border: 1px solid #c8e6c9;
+        }
 
-            .modal-card {
-                background: #fff;
-                width: 100%;
-                max-width: 480px;
-                border-radius: 16px;
-                padding: 24px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-                position: relative;
-                max-height: 90vh;
-                overflow-y: auto;
-            }
+        .btn-report {
+            background: #2e7d32;
+            color: #fff;
+            box-shadow: 0 2px 6px rgba(46,125,50,0.3);
+        }
 
-            .modal-close {
-                position: absolute;
-                top: 18px;
-                right: 20px;
-                font-size: 22px;
-                border: none;
-                background: transparent;
-                cursor: pointer;
-                color: #777;
-            }
-
-            .form-group {
-                margin-bottom: 14px;
-            }
-
-                .form-group label {
-                    display: block;
-                    font-size: 12.5px;
-                    font-weight: 700;
-                    color: #2e5934;
-                    margin-bottom: 5px;
-                }
-
-                .form-group input, .form-group textarea, .form-group select {
-                    width: 100%;
-                    padding: 10px 12px;
-                    border: 1px solid #c8e6c9;
-                    border-radius: 8px;
-                    font-size: 13px;
-                    outline: none;
-                    background: #fff;
-                }
-
-            .form-row {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-
-            .btn-save {
-                width: 100%;
-                padding: 12px;
-                background: #2e7d32;
-                color: #fff;
-                border: none;
-                border-radius: 8px;
-                font-weight: 700;
-                font-size: 14px;
-                cursor: pointer;
-                margin-top: 8px;
-            }
-
-            .share-bar {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                margin-top: 14px;
-                padding-top: 12px;
-                border-top: 1px solid #edf4ee;
-            }
-
-            .btn-share {
-                padding: 6px 12px;
-                border-radius: 6px;
-                font-size: 11.5px;
-                font-weight: 700;
-                color: #fff;
-                border: none;
-                cursor: pointer;
-                text-decoration: none;
-            }
-
-            .btn-wa {
-                background: #25d366;
-            }
-
-            .btn-ig {
-                background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            }
-
-            .btn-native {
+            .btn-report:hover {
                 background: #1b5e20;
             }
 
-            #notificacionBanner {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                z-index: 3000;
-                max-width: 380px;
-                background: #fff;
-                border-left: 6px solid #2e7d32;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        .btn-admin-panel {
+            background: #0f2d18;
+            color: #a3e635;
+            border: 1px solid #143e20;
+        }
+
+            .btn-admin-panel:hover {
+                background: #164e28;
+            }
+
+        .user-pts-top {
+            background: #f1f8f3;
+            border: 1px solid #c8e6c9;
+            color: #1b5e20;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 800;
+        }
+
+        .clima-badge {
+            background: #e0f2fe;
+            border: 1px solid #bae6fd;
+            color: #0369a1;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #map {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+        }
+
+        .leaflet-routing-container {
+            display: none !important;
+        }
+
+        .challenge-box {
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            border-radius: 6px;
+            padding: 8px;
+            margin: 8px 0;
+            text-align: left;
+        }
+
+        .challenge-pts {
+            color: #1b5e20;
+            font-weight: 800;
+            font-size: 11.5px;
+            display: inline-block;
+            background: #c8e6c9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 3px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .modal-card {
+            background: #fff;
+            width: 100%;
+            max-width: 480px;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            font-size: 22px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+            .form-group label {
+                display: block;
+                font-size: 12.5px;
+                font-weight: 700;
+                color: #2e5934;
+                margin-bottom: 5px;
+            }
+
+            .form-group input, .form-group textarea, .form-group select {
+                width: 100%;
+                padding: 10px 12px;
+                border: 1px solid #c8e6c9;
                 border-radius: 8px;
-                padding: 16px;
-                display: none;
-                animation: slideIn 0.3s ease-out forwards;
+                font-size: 13px;
+                outline: none;
+                background: #fff;
             }
 
-                #notificacionBanner.error {
-                    border-left-color: #c62828;
-                }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
 
-            @@keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
+        .btn-save {
+            width: 100%;
+            padding: 12px;
+            background: #2e7d32;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
 
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
+        .share-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid #edf4ee;
+        }
+
+        .btn-share {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-wa {
+            background: #25d366;
+        }
+
+        .btn-ig {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+
+        .btn-native {
+            background: #1b5e20;
+        }
+
+        #notificacionBanner {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 3000;
+            max-width: 380px;
+            background: #fff;
+            border-left: 6px solid #2e7d32;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            padding: 16px;
+            display: none;
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+            #notificacionBanner.error {
+                border-left-color: #c62828;
             }
+
+        @@keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -504,8 +504,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Evidencia Fotográfica (Opcional)</label>
-                    <input type="file" id="repFoto" name="fotoEvidencia" accept="image/*" />
+                    <label>Evidencia Fotográfica (Obligatoria) *</label>
+                    <input type="file" id="repFoto" name="fotoEvidencia" accept="image/*" required />
                 </div>
 
                 <button type="submit" id="btnGuardar" class="btn-save">Guardar Incidencia y Publicar Reto</button>
@@ -579,267 +579,244 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
     <script>
-            const tecamacCoord = [19.7150, -98.9680];
-            const map = L.map('map').setView(tecamacCoord, 13);
+        const tecamacCoord = [19.7150, -98.9680];
+        const map = L.map('map').setView(tecamacCoord, 13);
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; OpenStreetMap'
-            }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
 
-            function generarContenidoPopup(r) {
-                let imgHtml = r.Foto ? `<div style="margin-top:6px;"><span style="font-size:11px; color:#555; font-weight:600;">Evidencia / Solución:</span><img src="${r.Foto}" style="width:100%; max-height:110px; object-fit:cover; border-radius:6px; margin-top:3px;"/></div>` : '';
+        function generarContenidoPopup(r) {
+            let imgHtml = r.Foto ? `<div style="margin-top:6px;"><span style="font-size:11px; color:#555; font-weight:600;">Evidencia / Solución:</span><img src="${r.Foto}" style="width:100%; max-height:110px; object-fit:cover; border-radius:6px; margin-top:3px;"/></div>` : '';
 
-                const esResuelto = (r.Estatus === 'Resuelto');
-                const estatusColor = esResuelto ? '#2e7d32' : '#e65100';
-                const tituloSeguro = (r.Titulo || 'Reto Ecológico').replace(/'/g, "\\'");
+            const esResuelto = (r.Estatus === 'Resuelto');
+            const estatusColor = esResuelto ? '#2e7d32' : '#e65100';
+            const tituloSeguro = (r.Titulo || 'Reto Ecológico').replace(/'/g, "\\'");
 
-                const botonHtml = esResuelto
-                    ? `<div style="background:#c8e6c9; color:#1b5e20; text-align:center; padding:6px; border-radius:4px; font-size:11.5px; font-weight:800; margin-top:6px;">✅ Reto Resuelto y Verificado</div>`
-                    : `<button type="button" onclick="prepararEvidenciaReto(${r.IdReto || r.Id})" style="width:100%; background:#1b5e20; color:#fff; border:none; padding:6px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; margin-top:6px;">
-                            📸 Subir Evidencia y Resolver
-                       </button>`;
+            const botonHtml = esResuelto
+                ? `<div style="background:#c8e6c9; color:#1b5e20; text-align:center; padding:6px; border-radius:4px; font-size:11.5px; font-weight:800; margin-top:6px;">✅ Reto Resuelto y Verificado</div>`
+                : `<button type="button" onclick="prepararEvidenciaReto(${r.IdReto || r.Id})" style="width:100%; background:#1b5e20; color:#fff; border:none; padding:6px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; margin-top:6px;">
+                        📸 Subir Evidencia y Resolver
+                   </button>`;
 
-                return `
-                    <div style="font-size:13px; line-height:1.4; min-width:215px;">
-                        <b style="color:#1b5e20; font-size:14px;">${r.Titulo}</b><br/>
-                        <span style="font-size:11.5px; color:#555;">Estatus: <b style="color:${estatusColor};">${r.Estatus}</b></span>
-                        ${imgHtml}
-                        <div class="challenge-box">
-                            <span style="font-size:11px; color:#2e7d32; font-weight:700;">🌱 RETO COMUNITARIO</span><br/>
-                            <b style="font-size:12.5px; color:#143319;">${r.TituloReto || r.Titulo}</b><br/>
-                            <span class="challenge-pts">Recompensa: +${r.PuntosReto || 100} pts</span>
-                            ${botonHtml}
-                        </div>
-                        <div style="margin-top:6px; display:flex; flex-direction:column; gap:5px;">
-                            <button type="button" onclick="trazarRutaHaciaReto(${r.Latitud}, ${r.Longitud}, '${tituloSeguro}')"
-                                    style="background:#0284c7; color:#fff; border:none; padding:6px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; width:100%;">
-                                🧭 Trazar Ruta desde mi Ubicación
-                            </button>
-                            <button type="button" onclick="compartirPunto('${tituloSeguro}', ${r.Latitud}, ${r.Longitud})"
-                                    style="background:#2e7d32; color:#fff; border:none; padding:6px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; width:100%;">
-                                Compartir en Redes
-                            </button>
-                        </div>
+            return `
+                <div style="font-size:13px; line-height:1.4; min-width:215px;">
+                    <b style="color:#1b5e20; font-size:14px;">${r.Titulo}</b><br/>
+                    <span style="font-size:11.5px; color:#555;">Estatus: <b style="color:${estatusColor};">${r.Estatus}</b></span>
+                    ${imgHtml}
+                    <div class="challenge-box">
+                        <span style="font-size:11px; color:#2e7d32; font-weight:700;">🌱 RETO COMUNITARIO</span><br/>
+                        <b style="font-size:12.5px; color:#143319;">${r.TituloReto || r.Titulo}</b><br/>
+                        <span class="challenge-pts">Recompensa: +${r.PuntosReto || 100} pts</span>
+                        ${botonHtml}
                     </div>
-                `;
+                    <div style="margin-top:6px; display:flex; flex-direction:column; gap:5px;">
+                        <button type="button" onclick="trazarRutaHaciaReto(${r.Latitud}, ${r.Longitud}, '${tituloSeguro}')"
+                                style="background:#0284c7; color:#fff; border:none; padding:6px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; width:100%;">
+                            🧭 Trazar Ruta desde mi Ubicación
+                        </button>
+                        <button type="button" onclick="compartirPunto('${tituloSeguro}', ${r.Latitud}, ${r.Longitud})"
+                                style="background:#2e7d32; color:#fff; border:none; padding:6px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; width:100%;">
+                            Compartir en Redes
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.marcadoresMapa = {};
+
+        const reportes = @Html.Raw(reportesJson);
+        reportes.forEach(r => {
+            const marker = L.marker([r.Latitud, r.Longitud]).addTo(map);
+            marker.bindPopup(generarContenidoPopup(r));
+            window.marcadoresMapa[r.Id] = marker;
+        });
+
+        function prepararEvidenciaReto(idReto) {
+            document.getElementById('retoIdInput').value = idReto;
+            abrirModal('modalEvidenciaReto');
+        }
+        function comprimirImagen(archivo, maxAncho = 800, calidad = 0.7) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        const url = URL.createObjectURL(archivo);
+        img.onload = () => {
+            URL.revokeObjectURL(url);
+            let ancho = img.width;
+            let alto = img.height;
+
+            if (ancho > maxAncho) {
+                alto = Math.round((alto * maxAncho) / ancho);
+                ancho = maxAncho;
             }
 
-            window.marcadoresMapa = {};
+            const canvas = document.createElement('canvas');
+            canvas.width = ancho;
+            canvas.height = alto;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, ancho, alto);
 
-            const reportes = @Html.Raw(reportesJson);
-            reportes.forEach(r => {
-                const marker = L.marker([r.Latitud, r.Longitud]).addTo(map);
-                marker.bindPopup(generarContenidoPopup(r));
-                window.marcadoresMapa[r.Id] = marker;
+            canvas.toBlob((blob) => {
+                resolve(new File([blob], "evidencia.jpg", { type: "image/jpeg" }));
+            }, "image/jpeg", calidad);
+        };
+        img.onerror = () => resolve(archivo);
+        img.src = url;
+    });
+}
+
+
+        function enviarReporteAjax(e) {
+           async function enviarReporteAjax(e) {
+    e.preventDefault();
+
+    const inputFoto = document.getElementById('repFoto');
+    if (!inputFoto.files || inputFoto.files.length === 0) {
+        mostrarNotificacionWeb(false, "Debes seleccionar una fotografía obligatoria antes de enviar el reporte.");
+        return;
+    }
+
+    const btn = document.getElementById('btnGuardar');
+    btn.disabled = true;
+    btn.innerText = "Validando foto con IA...";
+
+    const formData = new FormData(document.getElementById('formNuevoReporte'));
+    const fotoComprimida = await comprimirImagen(inputFoto.files[0]);
+    formData.set('fotoEvidencia', fotoComprimida, 'evidencia.jpg');
+
+    fetch('/Reportes/GuardarReporte', {
+        method: 'POST',
+        body: formData
+    })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerText = "Guardar Incidencia y Publicar Reto";
+                console.error("Detalle técnico en consola:", err);
+                mostrarNotificacionWeb(false, "Error de comunicación con el servidor.");
             });
+        }
+        }
 
-            function prepararEvidenciaReto(idReto) {
-                document.getElementById('retoIdInput').value = idReto;
-                abrirModal('modalEvidenciaReto');
+        function enviarEvidenciaRetoAjax(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('btnGuardarEvidencia');
+            btn.disabled = true;
+            btn.innerText = "Analizando foto con IA...";
+
+            const formData = new FormData(document.getElementById('formEvidenciaReto'));
+
+            fetch('/Reportes/CompletarRetoConEvidencia', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerText = "Enviar Evidencia y Reclamar Puntos";
+                cerrarModal('modalEvidenciaReto');
+                document.getElementById('formEvidenciaReto').reset();
+
+                mostrarNotificacionWeb(data.success, data.message);
+
+                if (data.success) {
+                    if (data.idReporte && window.marcadoresMapa[data.idReporte]) {
+                        map.removeLayer(window.marcadoresMapa[data.idReporte]);
+                        delete window.marcadoresMapa[data.idReporte];
+                    }
+
+                    const puntosGanados = data.puntosGanados || 100;
+                    const badgeSidebar = document.querySelector('.points-badge');
+                    const badgeTop = document.querySelector('.user-pts-top');
+
+                    if (badgeSidebar) {
+                        const actual = parseInt(badgeSidebar.innerText.replace(/\D/g, '')) || 0;
+                        badgeSidebar.innerText = `🏆 ${actual + puntosGanados} pts`;
+                    }
+                    if (badgeTop) {
+                        const actualTop = parseInt(badgeTop.innerText.replace(/\D/g, '')) || 0;
+                        badgeTop.innerText = `Mis Puntos: 🏆 ${actualTop + puntosGanados}`;
+                    }
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerText = "Enviar Evidencia y Reclamar Puntos";
+                console.error(err);
+                cerrarModal('modalEvidenciaReto');
+                mostrarNotificacionWeb(false, "Ocurrió un error al procesar la imagen con la inteligencia artificial.");
+            });
+        }
+
+        function mostrarNotificacionWeb(esExito, mensaje) {
+            const banner = document.getElementById('notificacionBanner');
+            const titulo = document.getElementById('notifTitulo');
+            const texto = document.getElementById('notifTexto');
+
+            texto.innerText = mensaje;
+
+            if (esExito) {
+                banner.classList.remove('error');
+                titulo.innerText = "🌱 ¡Operación Exitosa!";
+                titulo.style.color = "#1b5e20";
+            } else {
+                banner.classList.add('error');
+                titulo.innerText = "❌ Aviso del Sistema";
+                titulo.style.color = "#c62828";
             }
 
-            function enviarReporteAjax(e) {
-                e.preventDefault();
+            banner.style.display = 'block';
 
-                const btn = document.getElementById('btnGuardar');
-                btn.disabled = true;
-                btn.innerText = "Registrando en Neon...";
+            setTimeout(() => {
+                cerrarNotificacion();
+            }, 5500);
+        }
 
-                const formData = new FormData(document.getElementById('formNuevoReporte'));
+        function cerrarNotificacion() {
+            document.getElementById('notificacionBanner').style.display = 'none';
+        }
 
-                fetch('/Reportes/GuardarReporte', {
-                    method: 'POST',
-                    body: formData
-                })
+        function cargarClimaZona(lat, lng, etiqueta) {
+            const urlClima = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true`;
+            fetch(urlClima)
                 .then(res => res.json())
                 .then(data => {
-                    btn.disabled = false;
-                    btn.innerText = "Guardar Incidencia y Publicar Reto";
+                    if (data && data.current_weather) {
+                        const temp = Math.round(data.current_weather.temperature);
+                        const code = data.current_weather.weathercode;
+                        let icono = "☀️";
+                        if (code >= 1 && code <= 3) icono = "⛅";
+                        else if (code >= 45 && code <= 48) icono = "🌫️";
+                        else if (code >= 51 && code <= 67) icono = "🌧️";
+                        else if (code >= 80 && code <= 99) icono = "⛈️";
 
-                    if (data && data.success) {
-                        cerrarModal('modalReporte');
-                        document.getElementById('formNuevoReporte').reset();
-
-                        if (data.requiereValidacion) {
-                            mostrarNotificacionWeb(true, data.message || "✅ Tu reporte y reto ecológico fueron registrados y están en espera de validación por el Administrador.");
-                        } else if (data.reporte) {
-                            const nuevo = data.reporte;
-                            const nuevoMarker = L.marker([nuevo.Latitud, nuevo.Longitud]).addTo(map);
-                            nuevoMarker.bindPopup(generarContenidoPopup(nuevo)).openPopup();
-                            window.marcadoresMapa[nuevo.Id] = nuevoMarker;
-                            map.setView([nuevo.Latitud, nuevo.Longitud], 15);
-                            mostrarNotificacionWeb(true, "¡Incidencia guardada y reto publicado en el mapa!");
-                        }
-                    } else {
-                        cerrarModal('modalReporte');
-                        mostrarNotificacionWeb(false, data.message || "Error al guardar la incidencia.");
+                        document.getElementById('climaIcono').innerText = icono;
+                        document.getElementById('climaTemp').innerText = `${temp}°C ${etiqueta || 'Tecámac'}`;
                     }
                 })
-                .catch(err => {
-                    btn.disabled = false;
-                    btn.innerText = "Guardar Incidencia y Publicar Reto";
-                    console.error("Detalle técnico en consola:", err);
-                    cerrarModal('modalReporte');
-                    mostrarNotificacionWeb(false, "Error de comunicación con el servidor.");
+                .catch(() => {
+                    document.getElementById('climaTemp').innerText = "22°C Tecámac";
                 });
-            }
+        }
 
-            function enviarEvidenciaRetoAjax(e) {
-                e.preventDefault();
+        cargarClimaZona(tecamacCoord[0], tecamacCoord[1], "Tecámac");
 
-                const btn = document.getElementById('btnGuardarEvidencia');
-                btn.disabled = true;
-                btn.innerText = "Analizando foto con IA...";
+        let controlRutaActual = null;
+        let marcadorUsuarioGPS = null;
 
-                const formData = new FormData(document.getElementById('formEvidenciaReto'));
-
-                fetch('/Reportes/CompletarRetoConEvidencia', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(res => res.json())
-                .then(data => {
-                    btn.disabled = false;
-                    btn.innerText = "Enviar Evidencia y Reclamar Puntos";
-                    cerrarModal('modalEvidenciaReto');
-                    document.getElementById('formEvidenciaReto').reset();
-
-                    mostrarNotificacionWeb(data.success, data.message);
-
-                    if (data.success) {
-                        // 1. BORRAR EL PIN DEL MAPA DE INMEDIATO
-                        if (data.idReporte && window.marcadoresMapa[data.idReporte]) {
-                            map.removeLayer(window.marcadoresMapa[data.idReporte]);
-                            delete window.marcadoresMapa[data.idReporte];
-                        }
-
-                        // 2. ACTUALIZAR VISUALMENTE LOS PUNTOS EN PANTALLA SIN RECARGAR
-                        const puntosGanados = data.puntosGanados || 100;
-                        const badgeSidebar = document.querySelector('.points-badge');
-                        const badgeTop = document.querySelector('.user-pts-top');
-
-                        if (badgeSidebar) {
-                            const actual = parseInt(badgeSidebar.innerText.replace(/\D/g, '')) || 0;
-                            badgeSidebar.innerText = `🏆 ${actual + puntosGanados} pts`;
-                        }
-                        if (badgeTop) {
-                            const actualTop = parseInt(badgeTop.innerText.replace(/\D/g, '')) || 0;
-                            badgeTop.innerText = `Mis Puntos: 🏆 ${actualTop + puntosGanados}`;
-                        }
-                    }
-                })
-                .catch(err => {
-                    btn.disabled = false;
-                    btn.innerText = "Enviar Evidencia y Reclamar Puntos";
-                    console.error(err);
-                    cerrarModal('modalEvidenciaReto');
-                    mostrarNotificacionWeb(false, "Ocurrió un error al procesar la imagen con la inteligencia artificial.");
-                });
-            }
-
-            function mostrarNotificacionWeb(esExito, mensaje) {
-                const banner = document.getElementById('notificacionBanner');
-                const titulo = document.getElementById('notifTitulo');
-                const texto = document.getElementById('notifTexto');
-
-                texto.innerText = mensaje;
-
-                if (esExito) {
-                    banner.classList.remove('error');
-                    titulo.innerText = "🌱 ¡Operación Exitosa!";
-                    titulo.style.color = "#1b5e20";
-                } else {
-                    banner.classList.add('error');
-                    titulo.innerText = "❌ Aviso del Sistema";
-                    titulo.style.color = "#c62828";
-                }
-
-                banner.style.display = 'block';
-
-                setTimeout(() => {
-                    cerrarNotificacion();
-                }, 5500);
-            }
-
-            function cerrarNotificacion() {
-                document.getElementById('notificacionBanner').style.display = 'none';
-            }
-
-            
-            function cargarClimaZona(lat, lng, etiqueta) {
-                const urlClima = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true`;
-                fetch(urlClima)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data && data.current_weather) {
-                            const temp = Math.round(data.current_weather.temperature);
-                            const code = data.current_weather.weathercode;
-                            let icono = "☀️";
-                            if (code >= 1 && code <= 3) icono = "⛅";
-                            else if (code >= 45 && code <= 48) icono = "🌫️";
-                            else if (code >= 51 && code <= 67) icono = "🌧️";
-                            else if (code >= 80 && code <= 99) icono = "⛈️";
-
-                            document.getElementById('climaIcono').innerText = icono;
-                            document.getElementById('climaTemp').innerText = `${temp}°C ${etiqueta || 'Tecámac'}`;
-                        }
-                    })
-                    .catch(() => {
-                        document.getElementById('climaTemp').innerText = "22°C Tecámac";
-                    });
-            }
-
-            cargarClimaZona(tecamacCoord[0], tecamacCoord[1], "Tecámac");
-
-           
-            let controlRutaActual = null;
-            let marcadorUsuarioGPS = null;
-
-            function centrarEnTecamac() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        pos => {
-                            const lat = pos.coords.latitude;
-                            const lng = pos.coords.longitude;
-                            map.setView([lat, lng], 15);
-                            cargarClimaZona(lat, lng, "Tu Zona");
-
-                            if (marcadorUsuarioGPS) map.removeLayer(marcadorUsuarioGPS);
-                            marcadorUsuarioGPS = L.circleMarker([lat, lng], {
-                                radius: 9,
-                                fillColor: "#0284c7",
-                                color: "#ffffff",
-                                weight: 3,
-                                opacity: 1,
-                                fillOpacity: 1
-                            }).addTo(map).bindPopup("📍 <b>Tu ubicación actual</b>").openPopup();
-                        },
-                        () => map.setView(tecamacCoord, 13)
-                    );
-                } else {
-                    map.setView(tecamacCoord, 13);
-                }
-            }
-
-            function trazarRutaHaciaReto(destLat, destLng, tituloReto) {
-                map.closePopup();
-                mostrarNotificacionWeb(true, "📡 Obteniendo tu ubicación GPS para trazar la ruta...");
-
-                if (!navigator.geolocation) {
-                    mostrarNotificacionWeb(false, "Tu navegador no soporta geolocalización GPS.");
-                    return;
-                }
-
+        function centrarEnTecamac() {
+            if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        const userLat = pos.coords.latitude;
-                        const userLng = pos.coords.longitude;
+                    pos => {
+                        const lat = pos.coords.latitude;
+                        const lng = pos.coords.longitude;
+                        map.setView([lat, lng], 15);
+                        cargarClimaZona(lat, lng, "Tu Zona");
 
-                        cargarClimaZona(userLat, userLng, "Tu Zona");
-                        limpiarRutaActual();
-
-                        marcadorUsuarioGPS = L.circleMarker([userLat, userLng], {
+                        if (marcadorUsuarioGPS) map.removeLayer(marcadorUsuarioGPS);
+                        marcadorUsuarioGPS = L.circleMarker([lat, lng], {
                             radius: 9,
                             fillColor: "#0284c7",
                             color: "#ffffff",
@@ -847,156 +824,189 @@
                             opacity: 1,
                             fillOpacity: 1
                         }).addTo(map).bindPopup("📍 <b>Tu ubicación actual</b>").openPopup();
-
-                        controlRutaActual = L.Routing.control({
-                            waypoints: [
-                                L.latLng(userLat, userLng),
-                                L.latLng(destLat, destLng)
-                            ],
-                            router: L.Routing.osrmv1({
-                                serviceUrl: 'https://router.project-osrm.org/route/v1'
-                            }),
-                            lineOptions: {
-                                styles: [{ color: '#0284c7', opacity: 0.9, weight: 6 }]
-                            },
-                            createMarker: function() { return null; },
-                            addWaypoints: false,
-                            draggableWaypoints: false,
-                            fitSelectedRoutes: true,
-                            show: false
-                        })
-                        .on('routesfound', function(e) {
-                            const ruta = e.routes[0];
-                            const distanciaKm = (ruta.summary.totalDistance / 1000).toFixed(2);
-                            const tiempoMin = Math.round(ruta.summary.totalTime / 60);
-
-                            document.getElementById('btnLimpiarRuta').style.display = 'flex';
-                            mostrarNotificacionWeb(true, `🧭 Ruta hacia "${tituloReto}": ${distanciaKm} km (~${tiempoMin} min).`);
-                        })
-                        .on('routingerror', function() {
-                            mostrarNotificacionWeb(false, "No se pudo calcular la ruta terrestre hacia ese punto.");
-                        })
-                        .addTo(map);
                     },
-                    () => {
-                        mostrarNotificacionWeb(false, "Activa el permiso de ubicación en tu navegador (candado junto a la URL) para trazar la ruta desde tu GPS.");
-                    },
-                    { enableHighAccuracy: true, timeout: 10000 }
+                    () => map.setView(tecamacCoord, 13)
                 );
+            } else {
+                map.setView(tecamacCoord, 13);
+            }
+        }
+
+        function trazarRutaHaciaReto(destLat, destLng, tituloReto) {
+            map.closePopup();
+            mostrarNotificacionWeb(true, "📡 Obteniendo tu ubicación GPS para trazar la ruta...");
+
+            if (!navigator.geolocation) {
+                mostrarNotificacionWeb(false, "Tu navegador no soporta geolocalización GPS.");
+                return;
             }
 
-            function limpiarRutaActual() {
-                if (controlRutaActual) {
-                    map.removeControl(controlRutaActual);
-                    controlRutaActual = null;
-                }
-                if (marcadorUsuarioGPS) {
-                    map.removeLayer(marcadorUsuarioGPS);
-                    marcadorUsuarioGPS = null;
-                }
-                document.getElementById('btnLimpiarRuta').style.display = 'none';
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const userLat = pos.coords.latitude;
+                    const userLng = pos.coords.longitude;
+
+                    cargarClimaZona(userLat, userLng, "Tu Zona");
+                    limpiarRutaActual();
+
+                    marcadorUsuarioGPS = L.circleMarker([userLat, userLng], {
+                        radius: 9,
+                        fillColor: "#0284c7",
+                        color: "#ffffff",
+                        weight: 3,
+                        opacity: 1,
+                        fillOpacity: 1
+                    }).addTo(map).bindPopup("📍 <b>Tu ubicación actual</b>").openPopup();
+
+                    controlRutaActual = L.Routing.control({
+                        waypoints: [
+                            L.latLng(userLat, userLng),
+                            L.latLng(destLat, destLng)
+                        ],
+                        router: L.Routing.osrmv1({
+                            serviceUrl: 'https://router.project-osrm.org/route/v1'
+                        }),
+                        lineOptions: {
+                            styles: [{ color: '#0284c7', opacity: 0.9, weight: 6 }]
+                        },
+                        createMarker: function() { return null; },
+                        addWaypoints: false,
+                        draggableWaypoints: false,
+                        fitSelectedRoutes: true,
+                        show: false
+                    })
+                    .on('routesfound', function(e) {
+                        const ruta = e.routes[0];
+                        const distanciaKm = (ruta.summary.totalDistance / 1000).toFixed(2);
+                        const tiempoMin = Math.round(ruta.summary.totalTime / 60);
+
+                        document.getElementById('btnLimpiarRuta').style.display = 'flex';
+                        mostrarNotificacionWeb(true, `🧭 Ruta hacia "${tituloReto}": ${distanciaKm} km (~${tiempoMin} min).`);
+                    })
+                    .on('routingerror', function() {
+                        mostrarNotificacionWeb(false, "No se pudo calcular la ruta terrestre hacia ese punto.");
+                    })
+                    .addTo(map);
+                },
+                () => {
+                    mostrarNotificacionWeb(false, "Activa el permiso de ubicación en tu navegador (candado junto a la URL) para trazar la ruta desde tu GPS.");
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+
+        function limpiarRutaActual() {
+            if (controlRutaActual) {
+                map.removeControl(controlRutaActual);
+                controlRutaActual = null;
             }
+            if (marcadorUsuarioGPS) {
+                map.removeLayer(marcadorUsuarioGPS);
+                marcadorUsuarioGPS = null;
+            }
+            document.getElementById('btnLimpiarRuta').style.display = 'none';
+        }
 
-            let marcadorTemporal = null;
-            map.on('click', function(e) {
-                const lat = e.latlng.lat.toFixed(6);
-                const lng = e.latlng.lng.toFixed(6);
+        let marcadorTemporal = null;
+        map.on('click', function(e) {
+            const lat = e.latlng.lat.toFixed(6);
+            const lng = e.latlng.lng.toFixed(6);
 
-                document.getElementById('repLat').value = lat;
-                document.getElementById('repLng').value = lng;
+            document.getElementById('repLat').value = lat;
+            document.getElementById('repLng').value = lng;
 
-                if (marcadorTemporal) {
-                    map.removeLayer(marcadorTemporal);
-                }
-                marcadorTemporal = L.marker([lat, lng]).addTo(map);
+            if (marcadorTemporal) {
+                map.removeLayer(marcadorTemporal);
+            }
+            marcadorTemporal = L.marker([lat, lng]).addTo(map);
 
-                abrirModal('modalReporte');
+            abrirModal('modalReporte');
+        });
+
+        function levantarReporteCentro() {
+            const center = map.getCenter();
+            document.getElementById('repLat').value = center.lat.toFixed(6);
+            document.getElementById('repLng').value = center.lng.toFixed(6);
+            abrirModal('modalReporte');
+        }
+
+        function abrirModal(id) { document.getElementById(id).style.display = 'flex'; }
+
+        function cerrarModal(id) {
+            document.getElementById(id).style.display = 'none';
+            if (id === 'modalReporte' && marcadorTemporal) {
+                map.removeLayer(marcadorTemporal);
+                marcadorTemporal = null;
+            }
+        }
+
+        let textoGlobalCompartir = "";
+        let urlGlobalMapa = "";
+
+        function compartirPunto(tit, lat, lng) {
+            const titulo = tit || 'Reto Ecológico';
+            urlGlobalMapa = (lat && lng) ? `https://maps.google.com/?q=${lat},${lng}` : window.location.origin;
+            textoGlobalCompartir = `🌱 ¡Únete al reto "${titulo}" en ECOTRACK Tecámac y gana +100 pts!\n📍 Ver en mapa: ${urlGlobalMapa}\n🔗 Plataforma: ${window.location.origin}`;
+
+            document.getElementById('txtRetoCompartir').innerText = titulo;
+
+            const textoEncoded = encodeURIComponent(textoGlobalCompartir);
+            const urlEncoded = encodeURIComponent(urlGlobalMapa);
+
+            document.getElementById('btnShareWA').href = `https://api.whatsapp.com/send?text=${textoEncoded}`;
+            document.getElementById('btnShareFB').href = `https://www.facebook.com/sharer/sharer.php?u=${urlEncoded}&quote=${textoEncoded}`;
+            document.getElementById('btnShareTW').href = `https://twitter.com/intent/tweet?text=${textoEncoded}`;
+            document.getElementById('btnShareTG').href = `https://t.me/share/url?url=${urlEncoded}&text=${textoEncoded}`;
+
+            document.getElementById('modalCompartirRedes').style.display = 'flex';
+        }
+
+        function cerrarModalRedes() {
+            document.getElementById('modalCompartirRedes').style.display = 'none';
+        }
+
+        function copiarParaInstagram() {
+            navigator.clipboard.writeText(textoGlobalCompartir).then(() => {
+                cerrarModalRedes();
+                mostrarNotificacionWeb(true, "¡Mensaje y ubicación copiados al portapapeles! Pégalo en Instagram, TikTok o Messenger.");
+                window.open('https://www.instagram.com/', '_blank');
             });
+        }
 
-            function levantarReporteCentro() {
-                const center = map.getCenter();
-                document.getElementById('repLat').value = center.lat.toFixed(6);
-                document.getElementById('repLng').value = center.lng.toFixed(6);
-                abrirModal('modalReporte');
-            }
-
-            function abrirModal(id) { document.getElementById(id).style.display = 'flex'; }
-
-            function cerrarModal(id) {
-                document.getElementById(id).style.display = 'none';
-                if (id === 'modalReporte' && marcadorTemporal) {
-                    map.removeLayer(marcadorTemporal);
-                    marcadorTemporal = null;
-                }
-            }
-
-            let textoGlobalCompartir = "";
-            let urlGlobalMapa = "";
-
-            function compartirPunto(tit, lat, lng) {
-                const titulo = tit || 'Reto Ecológico';
-                urlGlobalMapa = (lat && lng) ? `https://maps.google.com/?q=${lat},${lng}` : window.location.origin;
-                textoGlobalCompartir = `🌱 ¡Únete al reto "${titulo}" en ECOTRACK Tecámac y gana +100 pts!\n📍 Ver en mapa: ${urlGlobalMapa}\n🔗 Plataforma: ${window.location.origin}`;
-
-                document.getElementById('txtRetoCompartir').innerText = titulo;
-
-                const textoEncoded = encodeURIComponent(textoGlobalCompartir);
-                const urlEncoded = encodeURIComponent(urlGlobalMapa);
-
-                document.getElementById('btnShareWA').href = `https://api.whatsapp.com/send?text=${textoEncoded}`;
-                document.getElementById('btnShareFB').href = `https://www.facebook.com/sharer/sharer.php?u=${urlEncoded}&quote=${textoEncoded}`;
-                document.getElementById('btnShareTW').href = `https://twitter.com/intent/tweet?text=${textoEncoded}`;
-                document.getElementById('btnShareTG').href = `https://t.me/share/url?url=${urlEncoded}&text=${textoEncoded}`;
-
-                document.getElementById('modalCompartirRedes').style.display = 'flex';
-            }
-
-            function cerrarModalRedes() {
-                document.getElementById('modalCompartirRedes').style.display = 'none';
-            }
-
-            function copiarParaInstagram() {
-                navigator.clipboard.writeText(textoGlobalCompartir).then(() => {
-                    cerrarModalRedes();
-                    mostrarNotificacionWeb(true, "¡Mensaje y ubicación copiados al portapapeles! Pégalo en Instagram, TikTok o Messenger.");
-                    window.open('https://www.instagram.com/', '_blank');
-                });
-            }
-
-            function compartirDispositivoNativo() {
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'EcoTrack Tecámac',
-                        text: textoGlobalCompartir,
-                        url: urlGlobalMapa
-                    }).catch(() => {});
-                } else {
-                    copiarParaInstagram();
-                }
-            }
-
-            function compartirWhatsApp() {
-                const tit = document.getElementById('repTitulo').value || 'Incidencia';
-                const lat = document.getElementById('repLat').value;
-                const lng = document.getElementById('repLng').value;
-                const msg = encodeURIComponent(`🚨 *ECOTRACK Tecámac*\nIncidencia: ${tit}\nUbicación: https://maps.google.com/?q=${lat},${lng}`);
-                window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
-            }
-
-            function compartirInstagram() {
-                const tit = document.getElementById('repTitulo').value || 'Incidencia';
-                const lat = document.getElementById('repLat').value;
-                const lng = document.getElementById('repLng').value;
-                textoGlobalCompartir = `🚨 ECOTRACK Tecámac: ${tit} (Ubicación: https://maps.google.com/?q=${lat},${lng})`;
+        function compartirDispositivoNativo() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'EcoTrack Tecámac',
+                    text: textoGlobalCompartir,
+                    url: urlGlobalMapa
+                }).catch(() => {});
+            } else {
                 copiarParaInstagram();
             }
+        }
 
-            function compartirNativo() {
-                const tit = document.getElementById('repTitulo').value || 'Incidencia Ambiental';
-                const lat = document.getElementById('repLat').value;
-                const lng = document.getElementById('repLng').value;
-                compartirPunto(tit, lat, lng);
-            }
+        function compartirWhatsApp() {
+            const tit = document.getElementById('repTitulo').value || 'Incidencia';
+            const lat = document.getElementById('repLat').value;
+            const lng = document.getElementById('repLng').value;
+            const msg = encodeURIComponent(`🚨 *ECOTRACK Tecámac*\nIncidencia: ${tit}\nUbicación: https://maps.google.com/?q=${lat},${lng}`);
+            window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+        }
+
+        function compartirInstagram() {
+            const tit = document.getElementById('repTitulo').value || 'Incidencia';
+            const lat = document.getElementById('repLat').value;
+            const lng = document.getElementById('repLng').value;
+            textoGlobalCompartir = `🚨 ECOTRACK Tecámac: ${tit} (Ubicación: https://maps.google.com/?q=${lat},${lng})`;
+            copiarParaInstagram();
+        }
+
+        function compartirNativo() {
+            const tit = document.getElementById('repTitulo').value || 'Incidencia Ambiental';
+            const lat = document.getElementById('repLat').value;
+            const lng = document.getElementById('repLng').value;
+            compartirPunto(tit, lat, lng);
+        }
     </script>
 </body>
 </html>

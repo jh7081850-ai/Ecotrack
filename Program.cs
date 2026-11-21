@@ -24,7 +24,6 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// 4. ACTIVAR SESIÓN (DEBE IR ANTES DE UseAuthorization)
 app.UseSession();
 
 app.UseAuthorization();
