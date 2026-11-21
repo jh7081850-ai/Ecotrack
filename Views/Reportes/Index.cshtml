@@ -361,7 +361,7 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            z-index: 3000;
+            z-index: 5000;
             max-width: 380px;
             background: #fff;
             border-left: 6px solid #2e7d32;
@@ -638,65 +638,83 @@
             document.getElementById('retoIdInput').value = idReto;
             abrirModal('modalEvidenciaReto');
         }
-        function comprimirImagen(archivo, maxAncho = 800, calidad = 0.7) {
-    return new Promise((resolve) => {
-        const img = new Image();
-        const url = URL.createObjectURL(archivo);
-        img.onload = () => {
-            URL.revokeObjectURL(url);
-            let ancho = img.width;
-            let alto = img.height;
 
-            if (ancho > maxAncho) {
-                alto = Math.round((alto * maxAncho) / ancho);
-                ancho = maxAncho;
+        function comprimirImagen(archivo, maxAncho = 800, calidad = 0.7) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                const url = URL.createObjectURL(archivo);
+                img.onload = () => {
+                    URL.revokeObjectURL(url);
+                    let ancho = img.width;
+                    let alto = img.height;
+
+                    if (ancho > maxAncho) {
+                        alto = Math.round((alto * maxAncho) / ancho);
+                        ancho = maxAncho;
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = ancho;
+                    canvas.height = alto;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, ancho, alto);
+
+                    canvas.toBlob((blob) => {
+                        resolve(blob ? new File([blob], "evidencia.jpg", { type: "image/jpeg" }) : archivo);
+                    }, "image/jpeg", calidad);
+                };
+                img.onerror = () => resolve(archivo);
+                img.src = url;
+            });
+        }
+
+        async function enviarReporteAjax(e) {
+            e.preventDefault();
+
+            const inputFoto = document.getElementById('repFoto');
+            if (!inputFoto.files || inputFoto.files.length === 0) {
+                mostrarNotificacionWeb(false, "Debes seleccionar una fotografía obligatoria antes de enviar el reporte.");
+                return;
             }
 
-            const canvas = document.createElement('canvas');
-            canvas.width = ancho;
-            canvas.height = alto;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, ancho, alto);
+            const btn = document.getElementById('btnGuardar');
+            btn.disabled = true;
+            btn.innerText = "Validando foto con IA...";
 
-            canvas.toBlob((blob) => {
-                resolve(new File([blob], "evidencia.jpg", { type: "image/jpeg" }));
-            }, "image/jpeg", calidad);
-        };
-        img.onerror = () => resolve(archivo);
-        img.src = url;
-    });
-}
+            try {
+                const formData = new FormData(document.getElementById('formNuevoReporte'));
+                const fotoComprimida = await comprimirImagen(inputFoto.files[0]);
+                formData.set('fotoEvidencia', fotoComprimida, 'evidencia.jpg');
 
+                const res = await fetch('/Reportes/GuardarReporte', {
+                    method: 'POST',
+                    body: formData
+                });
 
-        function enviarReporteAjax(e) {
-           async function enviarReporteAjax(e) {
-    e.preventDefault();
+                const texto = await res.text();
+                let data = null;
+                try {
+                    data = JSON.parse(texto);
+                } catch {
+                    data = { success: false, message: "Respuesta inesperada del servidor (HTTP " + res.status + ")." };
+                }
 
-    const inputFoto = document.getElementById('repFoto');
-    if (!inputFoto.files || inputFoto.files.length === 0) {
-        mostrarNotificacionWeb(false, "Debes seleccionar una fotografía obligatoria antes de enviar el reporte.");
-        return;
-    }
+                btn.disabled = false;
+                btn.innerText = "Guardar Incidencia y Publicar Reto";
 
-    const btn = document.getElementById('btnGuardar');
-    btn.disabled = true;
-    btn.innerText = "Validando foto con IA...";
-
-    const formData = new FormData(document.getElementById('formNuevoReporte'));
-    const fotoComprimida = await comprimirImagen(inputFoto.files[0]);
-    formData.set('fotoEvidencia', fotoComprimida, 'evidencia.jpg');
-
-    fetch('/Reportes/GuardarReporte', {
-        method: 'POST',
-        body: formData
-    })
-            .catch(err => {
+                if (data && data.success) {
+                    cerrarModal('modalReporte');
+                    document.getElementById('formNuevoReporte').reset();
+                    mostrarNotificacionWeb(true, data.message || "✅ Tu reporte y reto ecológico fueron registrados y están en espera de validación por el Administrador.");
+                } else {
+                    mostrarNotificacionWeb(false, (data && data.message) || "Error al guardar la incidencia.");
+                }
+            } catch (err) {
                 btn.disabled = false;
                 btn.innerText = "Guardar Incidencia y Publicar Reto";
                 console.error("Detalle técnico en consola:", err);
                 mostrarNotificacionWeb(false, "Error de comunicación con el servidor.");
-            });
-        }
+            }
         }
 
         function enviarEvidenciaRetoAjax(e) {
@@ -771,7 +789,7 @@
 
             setTimeout(() => {
                 cerrarNotificacion();
-            }, 5500);
+            }, 6500);
         }
 
         function cerrarNotificacion() {
@@ -779,10 +797,13 @@
         }
 
         function cargarClimaZona(lat, lng, etiqueta) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 5000);
             const urlClima = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true`;
-            fetch(urlClima)
+            fetch(urlClima, { signal: controller.signal })
                 .then(res => res.json())
                 .then(data => {
+                    clearTimeout(timer);
                     if (data && data.current_weather) {
                         const temp = Math.round(data.current_weather.temperature);
                         const code = data.current_weather.weathercode;
@@ -797,7 +818,8 @@
                     }
                 })
                 .catch(() => {
-                    document.getElementById('climaTemp').innerText = "22°C Tecámac";
+                    clearTimeout(timer);
+                    document.getElementById('climaTemp').innerText = `22°C ${etiqueta || 'Tecámac'}`;
                 });
         }
 
